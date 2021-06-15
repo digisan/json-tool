@@ -1,0 +1,131 @@
+[
+    {
+        "meta": {
+            "alignMethod": "mapped1",
+            "capability": "literacy",
+            "inputFormat": "json",
+            "levelMethod": "mapped",
+            "levelProgLevel": 123,
+            "messageID": "Ay4YV50XS1154EGsMSlu6E",
+            "providerName": "BrightPath",
+            "readTimestampUTC": "2021-05-24T10:35:16Z",
+            "readerID": "Ay4YV50XS1154EGsMSltdC",
+            "readerName": "VVJ2q6",
+            "sourceFileName": "/home/qmiao/Desktop/OTF/cvthub/otfdata/in/brightpath/BrightPath.json.brightpath",
+            "workflow": {
+                "skipped": [
+                    "mathspathway_align",
+                    "mathspathway_map"
+                ],
+                "succeeded": [
+                    "brightpath_align",
+                    "brightpath_composite_token",
+                    "brightpath_map"
+                ]
+            }
+        },
+        "original": {
+            "additional_schools": [],
+            "assessor_participation": {
+                "person": {
+                    "first_name": "Sabine",
+                    "identifiers": [],
+                    "last_name": "Hoffmann",
+                    "user": {
+                        "email": "sabinehoffmann835@gmail.com"
+                    }
+                },
+                "research": false
+            },
+            "descriptor": "<ul>\n<li>Individual teacher comment - what you did well.</li>\n</ul>",
+            "notes": "",
+            "parent_comments": "<p>Teacher Comments</p>",
+            "school": {
+                "identifiers": [
+                    {
+                        "identifier": "1Demo",
+                        "provider": "Research School ID"
+                    }
+                ],
+                "name": "WA Demo School",
+                "sector": "Research Sector"
+            },
+            "score": 350,
+            "student_comments": "<ul>\n<li>Individual teacher comment</li>\n</ul>",
+            "student_participation": {
+                "enrolment": {
+                    "cohort": {
+                        "academic_year": 3,
+                        "calendar_year": 2020
+                    },
+                    "student": {
+                        "atsi": true,
+                        "dob": "2013-11-21",
+                        "eald": null,
+                        "first_name": "Kandra",
+                        "gender": 2,
+                        "identifiers": [
+                            {
+                                "identifier": "187",
+                                "provider": "Research Student ID"
+                            }
+                        ],
+                        "last_name": "Bosarge",
+                        "lbote": null
+                    }
+                },
+                "hard_copy": true,
+                "name": "",
+                "work": null
+            },
+            "teaching_points": "<ul>\n<li>Individual teacher comment -&nbsp;start to</li>\n</ul>",
+            "test": {
+                "assessment_type": "SINGLE_ASSESSOR",
+                "date_administered": "2020-06-02",
+                "description": "Test data for NSIP",
+                "name": "Test project for NSIP",
+                "scale": "Narrative Scale",
+                "termoccurrence": null,
+                "years": [
+                    "Year 1",
+                    "Year 2"
+                ]
+            }
+        },
+        "otf": {
+            "align": {
+                "alignmentServiceID": "NiJ3XA2rB09PvBzhjqNNDS",
+                "alignmentServiceName": "y06zqb",
+                "alignments": [
+                    {
+                        "element": "https://mracqa.azurewebsites.net/elements/learning-progressions/3.0/2020/06/6a0a5440-f760-460d-ab64-418437ace086",
+                        "generalCapability": "https://mracqa.azurewebsites.net/elements/learning-progressions/3.0/2020/06/5316eb98-cdee-4fba-bec4-074271e0954f",
+                        "heading": "https://mracqa.azurewebsites.net/elements/learning-progressions/3.0/2020/06/c7fefa09-e50d-4782-abaa-f66ef68f415f",
+                        "indicator": "LRUnT3.6",
+                        "indicatorType": "https://mracqa.azurewebsites.net/elements/learning-progressions/3.0/2020/06/ec3f93a9-2b0d-41ad-b55e-f8dd907c9c4a",
+                        "progressionLevel": "LRUnT3",
+                        "subElement": "https://mracqa.azurewebsites.net/elements/learning-progressions/3.0/2020/06/525ea8f9-3693-4c93-90d2-39d89c28ede1"
+                    },
+                    {
+                        "element": "https://mracqa.azurewebsites.net/elements/learning-progressions/3.0/2020/06/6a0a5440-f760-460d-ab64-418437ace086",
+                        "generalCapability": "https://mracqa.azurewebsites.net/elements/learning-progressions/3.0/2020/06/5316eb98-cdee-4fba-bec4-074271e0954f",
+                        "heading": "https://mracqa.azurewebsites.net/elements/learning-progressions/3.0/2020/06/c7fefa09-e50d-4782-abaa-f66ef68f415f",
+                        "indicator": "LRUnT3.6",
+                        "indicatorType": "https://mracqa.azurewebsites.net/elements/learning-progressions/3.0/2020/06/ec3f93a9-2b0d-41ad-b55e-f8dd907c9c4a",
+                        "progressionLevel": "LRUnT3",
+                        "subElement": "https://mracqa.azurewebsites.net/elements/learning-progressions/3.0/2020/06/525ea8f9-3693-4c93-90d2-39d89c28ede1"
+                    }
+                ],
+                "capability": "literacy",
+                "method": "mapped",
+                "token": "Narrative Scale 350"
+            },
+            "compToken": "Narrative Scale 350",
+            "id": {
+                "studentFamilyName": "Bosarge",
+                "studentGivenName": "Kandra",
+                "studentID": "187"
+            }
+        }
+    }
+]
