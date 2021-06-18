@@ -38,10 +38,10 @@ func TestJSONBreakBlkContV2(t *testing.T) {
 	}
 }
 
-func TestScanArray2Objects(t *testing.T) {
+func TestScan2Objects(t *testing.T) {
 
 	// file, err := os.OpenFile("/home/qmiao/Desktop/rrd.json", os.O_RDONLY, os.ModePerm)
-	file, err := os.OpenFile("./data/data.json", os.O_RDONLY, os.ModePerm)
+	file, err := os.Open("./data/glossary.json")
 	if err != nil {
 		fPln(err)
 	}

@@ -370,7 +370,7 @@ func ScanObject(r io.Reader, mustarray, check bool, style OutStyle) (<-chan Resu
 			case advance >= 0: // found
 				return advance + 1, dropCR(data[:advance]), nil
 
-			case advance == -1 && cap(data) < SCAN_STEP: // didn't find, then expand to max cap
+			case advance == -1 && len(data) == cap(data) && cap(data) < SCAN_STEP: // didn't find, then expand to max cap
 				return 0, nil, nil
 
 			case advance == -1 && len(data) == SCAN_STEP: // didn't find, even if got max cap. ingest all
