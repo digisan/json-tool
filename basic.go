@@ -74,3 +74,29 @@ func Cvt2XML(jsonstr string, mav map[string]interface{}) string {
 
 	return xmlstr
 }
+
+// MarshalRemove :
+func MarshalRemove(v interface{}, mFieldOldNew map[string]string, rmFields ...string) (bytes []byte, err error) {
+	if bytes, err = json.Marshal(v); err != nil {
+		return nil, err
+	}
+	m := make(map[string]interface{})
+	json.Unmarshal(bytes, &m)
+	for _, f := range rmFields {
+		delete(m, f)
+	}
+NEXT_NEW:
+	for fOld, fNew := range mFieldOldNew {
+		for f, v := range m {
+			if f == fOld {
+				m[fNew] = v
+				delete(m, fOld)
+				continue NEXT_NEW
+			}
+		}
+	}
+	if bytes, err = json.Marshal(m); err != nil {
+		return nil, err
+	}
+	return bytes, nil
+}
