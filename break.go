@@ -373,9 +373,12 @@ func ScanObject(r io.Reader, mustarray, check bool, style OutStyle) (<-chan Resu
 			case advance == -1 && len(data) == cap(data) && cap(data) < SCAN_STEP: // didn't find, then expand to max cap
 				return 0, nil, nil
 
+			case advance == -1 && len(data) < cap(data) && !atEOF: // didn't find AND only take part this time
+				return 0, nil, nil
+
 			case advance == -1 && len(data) == SCAN_STEP: // didn't find, even if got max cap. ingest all
 				partialLong = true
-				return SCAN_STEP, dropCR(data), nil
+				return len(data), dropCR(data), nil
 
 			default: // case advance == -1 && len(data) < SCAN_STEP: // didn't find, got part when at max cap. ingest & close long line.
 				return len(data), dropCR(data), nil
@@ -402,6 +405,6 @@ func ScanObject(r io.Reader, mustarray, check bool, style OutStyle) (<-chan Resu
 		}
 	}()
 
-	time.Sleep(5 * time.Millisecond)
+	time.Sleep(20 * time.Millisecond)
 	return chRst, ja
 }
