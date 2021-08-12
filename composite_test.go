@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestFlattenObject(t *testing.T) {
+func TestComposite(t *testing.T) {
 	data, err := os.ReadFile("./data/FlattenTest.json")
 	if err != nil {
 		panic(err)
@@ -14,9 +14,6 @@ func TestFlattenObject(t *testing.T) {
 	jsonStr := string(data)
 	m, err := FlattenObject(jsonStr)
 	fmt.Println(len(m), err)
-	I := 0
-	for k, v := range m {
-		fmt.Printf("%02d --- %v: %v\n", I, k, v)
-		I++
-	}
+	jsonstr := Composite(m)
+	os.WriteFile("./data/FlattenTest_Composite.json", []byte(jsonstr), os.ModePerm)
 }

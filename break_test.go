@@ -47,7 +47,7 @@ func TestScan2Objects(t *testing.T) {
 	}
 
 	mustarray := false
-	if chRst, ja := ScanObject(file, mustarray, true, OUT_ORI); !ja && mustarray {
+	if chRst, ja := ScanObject(file, mustarray, true, OUT_FMT); !ja && mustarray {
 
 		fPln("NOT JSON array")
 

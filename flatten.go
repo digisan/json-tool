@@ -13,7 +13,7 @@ func dumpMap(pk string, jv interface{}, mflat *map[string]interface{}) {
 
 	case []interface{}:
 		for i, a := range m {
-			idx := fmt.Sprintf("%s#%d", pk, i)
+			idx := fmt.Sprintf("%s.%d", pk, i)
 			dumpMap(idx, a, mflat)
 		}
 
@@ -27,7 +27,7 @@ func dumpMap(pk string, jv interface{}, mflat *map[string]interface{}) {
 				switch mv := v.(type) {
 				case []interface{}:
 					for i, a := range v.([]interface{}) {
-						idx := fmt.Sprintf("%s#%d", k, i)
+						idx := fmt.Sprintf("%s.%d", k, i)
 						dumpMap(idx, a, mflat)
 					}
 				default:

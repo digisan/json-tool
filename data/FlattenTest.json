@@ -1,0 +1,108 @@
+{
+    "array1": [
+        1,
+        null,
+        false,
+        "abc"
+    ],
+    "array2": [
+        [
+            2,
+            "foo",
+            true,
+            null
+        ],
+        [
+            1,
+            null,
+            false,
+            "abc",
+            {
+                "obj": {
+                    "attr": "innervalue"
+                }
+            }
+        ]
+    ],
+    "array": [
+        {
+            "a": "b",
+            "c": "d",
+            "e": "f",
+            "subarray": [
+                {
+                    "aa": "BB",
+                    "cc": "DD",
+                    "ee": "FF"
+                },
+                {
+                    "aaa": "BBB",
+                    "ccc": "DDD",
+                    "eee": "FFF"
+                }
+            ]
+        },
+        {
+            "a": "B",
+            "c": "D",
+            "e": "F",
+            "subarray": [
+                {
+                    "foo": "FOO",
+                    "bar": "BAR",
+                    "baz": "BAZ",
+                    "ssarray": [
+                        null,
+                        true,
+                        1.2
+                    ]
+                },
+                {
+                    "foofoo": "FOOFOO",
+                    "barbar": "BARBAR",
+                    "bazbaz": "BAZBAZ",
+                    "ssarray": [
+                        [
+                            null,
+                            true,
+                            1.2
+                        ],
+                        {
+                            "vsimple": "vvalue",
+                            "varray": [
+                                null,
+                                true,
+                                1.2,
+                                "value",
+                                {
+                                    "key": 0
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "object1": {
+        "object11": {
+            "a": "b",
+            "c": "d",
+            "e": "f"
+        },
+        "object12": {
+            "a": "B",
+            "c": "D",
+            "e": "F"
+        }
+    },
+    "boolean": true,
+    "null": null,
+    "number": 123,
+    "object": {
+        "a": "b",
+        "c": "d",
+        "e": "f"
+    },
+    "string": "Hello World"
+}
