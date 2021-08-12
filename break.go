@@ -3,6 +3,7 @@ package jsontool
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"io"
 	"strings"
 	"time"
@@ -230,7 +231,7 @@ const (
 )
 
 // ScanObject : any format json array should be OK.
-func ScanObject(r io.Reader, mustarray, check bool, style OutStyle) (<-chan ResultOfScan, bool) {
+func ScanObject(ctx context.Context, r io.Reader, mustarray, check bool, style OutStyle) (<-chan ResultOfScan, bool) {
 
 	var (
 		chRst = make(chan ResultOfScan)
@@ -257,7 +258,7 @@ func ScanObject(r io.Reader, mustarray, check bool, style OutStyle) (<-chan Resu
 			scanBuf     = make([]byte, SCAN_STEP)
 		)
 
-		fillRst := func(object string) {
+		fillRst := func(object string) (next bool) {
 
 			object = sTrimLeft(object, "[ \t")
 			object = sTrimRight(object, ",] \t")
@@ -281,15 +282,21 @@ func ScanObject(r io.Reader, mustarray, check bool, style OutStyle) (<-chan Resu
 				rst.Obj = object
 			}
 
-			chRst <- rst
+			select {
+			case chRst <- rst:
+			case <-ctx.Done():
+				return false
+			}
+
+			return true
 		}
 
-		lineToRst := func(line string) {
+		lineToRst := func(line string) (next bool) {
 
 			// if partialLong, only inflate sbLine, return
 			if partialLong {
 				sbLine.WriteString(line)
-				return
+				return true
 			}
 
 			// if not partialLong, and sbLine has content, modify input line
@@ -303,18 +310,22 @@ func ScanObject(r io.Reader, mustarray, check bool, style OutStyle) (<-chan Resu
 
 			if len(prevTail) > 0 {
 				sbObject.WriteString(prevTail)
-				fillRst(sbObject.String())
+				if !fillRst(sbObject.String()) {
+					return false
+				}
 				sbObject.Reset()
 			}
 
 			for _, object := range objects {
-				fillRst(object)
+				if !fillRst(object) {
+					return false
+				}
 			}
 
 			if len(nextHead) > 0 {
 				sbObject.WriteString(nextHead)
 				record = true
-				return
+				return true
 			}
 
 			// object starts
@@ -327,11 +338,15 @@ func ScanObject(r io.Reader, mustarray, check bool, style OutStyle) (<-chan Resu
 
 				// object ends
 				if L == 0 {
-					fillRst(sbObject.String())
+					if !fillRst(sbObject.String()) {
+						return false
+					}
 					sbObject.Reset()
 					record = false
 				}
 			}
+
+			return true
 		}
 
 		split := func(data []byte, atEOF bool) (advance int, token []byte, err error) {
@@ -340,22 +355,6 @@ func ScanObject(r io.Reader, mustarray, check bool, style OutStyle) (<-chan Resu
 			// if DEBUG >= 1 {
 			// 	fPln("why?")
 			// }
-
-			////////////////////////////////////////////////////////////////
-
-			// if atEOF && len(data) == 0 {
-			// 	return 0, nil, nil
-			// }
-			// if i := bytes.IndexByte(data, '\n'); i >= 0 {
-			// 	// We have a full newline-terminated line.
-			// 	return i + 1, dropCR(data[0:i]), nil
-			// }
-			// // If we're at EOF, we have a final, non-terminated line. Return it.
-			// if atEOF {
-			// 	return len(data), dropCR(data), nil
-			// }
-			// // Request more data.
-			// return 0, nil, nil
 
 			////////////////////////////////////////////////////////////////
 
@@ -401,7 +400,9 @@ func ScanObject(r io.Reader, mustarray, check bool, style OutStyle) (<-chan Resu
 					lbbChecked = true
 				}
 			}
-			lineToRst(line)
+			if !lineToRst(line) {
+				return
+			}
 		}
 	}()
 

@@ -1,6 +1,7 @@
 package jsontool
 
 import (
+	"context"
 	"os"
 	"testing"
 	"time"
@@ -38,16 +39,20 @@ func TestJSONBreakBlkContV2(t *testing.T) {
 	}
 }
 
-func TestScan2Objects(t *testing.T) {
+func TestScanObject(t *testing.T) {
+
+	// set up a context to manage ingest pipeline
+	ctx, cancelFunc := context.WithCancel(context.Background())
+	defer cancelFunc()
 
 	// file, err := os.OpenFile("/home/qmiao/Desktop/rrd.json", os.O_RDONLY, os.ModePerm)
-	file, err := os.Open("./data/glossary.json")
+	file, err := os.Open("./data/mixed.json")
 	if err != nil {
 		fPln(err)
 	}
 
 	mustarray := false
-	if chRst, ja := ScanObject(file, mustarray, true, OUT_FMT); !ja && mustarray {
+	if chRst, ja := ScanObject(ctx, file, mustarray, true, OUT_FMT); !ja && mustarray {
 
 		fPln("NOT JSON array")
 
