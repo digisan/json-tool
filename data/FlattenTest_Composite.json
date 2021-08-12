@@ -1,43 +1,32 @@
 {
-    "object1": {
-        "object12": {
-            "a": "B",
-            "e": "F",
-            "c": "D"
-        },
-        "object11": {
-            "e": "f",
-            "c": "d",
-            "a": "b"
-        }
-    },
     "array": [
         {
             "subarray": [
                 {
-                    "ee": "FF",
                     "aa": "BB",
+                    "ee": "FF",
                     "cc": "DD"
                 },
                 {
-                    "aaa": "BBB",
+                    "ccc": "DDD",
                     "eee": "FFF",
-                    "ccc": "DDD"
+                    "aaa": "BBB"
                 }
             ],
             "a": "b",
-            "e": "f",
-            "c": "d"
+            "c": "d",
+            "e": "f"
         },
         {
+            "c": "D",
             "subarray": [
                 {
-                    "baz": "BAZ",
                     "ssarray": [
                         null,
                         true,
                         1.2
                     ],
+                    "baz": "BAZ",
                     "foo": "FOO",
                     "bar": "BAR"
                 },
@@ -61,15 +50,21 @@
                             "vsimple": "vvalue"
                         }
                     ],
-                    "barbar": "BARBAR",
+                    "bazbaz": "BAZBAZ",
                     "foofoo": "FOOFOO",
-                    "bazbaz": "BAZBAZ"
+                    "barbar": "BARBAR"
                 }
             ],
-            "c": "D",
-            "a": "B",
-            "e": "F"
+            "e": "F",
+            "a": "B"
         }
+    ],
+    "string": "Hello World",
+    "array1": [
+        1,
+        null,
+        false,
+        "abc"
     ],
     "array2": [
         [
@@ -90,19 +85,24 @@
             }
         ]
     ],
-    "array1": [
-        1,
-        null,
-        false,
-        "abc"
-    ],
-    "number": 123,
     "boolean": true,
-    "object": {
-        "a": "b",
-        "c": "d",
-        "e": "f"
+    "number": 123,
+    "object1": {
+        "object11": {
+            "a": "b",
+            "e": "f",
+            "c": "d"
+        },
+        "object12": {
+            "e": "F",
+            "a": "B",
+            "c": "D"
+        }
     },
     "null": null,
-    "string": "Hello World"
+    "object": {
+        "a": "b",
+        "e": "f",
+        "c": "d"
+    }
 }

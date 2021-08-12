@@ -12,7 +12,7 @@ func TestFlattenObject(t *testing.T) {
 		panic(err)
 	}
 	jsonStr := string(data)
-	m, err := FlattenObject(jsonStr)
+	m, err := FlattenStr(jsonStr)
 	fmt.Println(len(m), err)
 	I := 0
 	for k, v := range m {

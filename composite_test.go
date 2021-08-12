@@ -11,8 +11,7 @@ func TestComposite(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	jsonStr := string(data)
-	m, err := FlattenObject(jsonStr)
+	m, err := Flatten(data)
 	fmt.Println(len(m), err)
 	jsonstr := Composite(m)
 	os.WriteFile("./data/FlattenTest_Composite.json", []byte(jsonstr), os.ModePerm)

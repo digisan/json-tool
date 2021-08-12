@@ -38,9 +38,20 @@ func dumpMap(pk string, jv interface{}, mflat *map[string]interface{}) {
 	}
 }
 
-func FlattenObject(jsonObj string) (map[string]interface{}, error) {
+func FlattenStr(jsonObj string) (map[string]interface{}, error) {
 	jsonMap := make(map[string]interface{})
 	err := json.Unmarshal([]byte(jsonObj), &jsonMap)
+	if err != nil {
+		return nil, err
+	}
+	flatMap := make(map[string]interface{})
+	dumpMap("", jsonMap, &flatMap)
+	return flatMap, nil
+}
+
+func Flatten(jsonObj []byte) (map[string]interface{}, error) {
+	jsonMap := make(map[string]interface{})
+	err := json.Unmarshal(jsonObj, &jsonMap)
 	if err != nil {
 		return nil, err
 	}
