@@ -15,24 +15,24 @@ func TestIsValid(t *testing.T) {
 			fPln("--->", jsonfile)
 
 			bytes, _ := os.ReadFile(dir + jsonfile)
-			jsonstr := string(bytes)
+			str := string(bytes)
 
-			if !IsValid(jsonstr) {
-				os.WriteFile(fSf("debug_%s.json", jsonfile), []byte(jsonstr), 0666)
+			if !IsValidStr(str) {
+				os.WriteFile(fSf("debug_%s.json", jsonfile), []byte(str), 0666)
 				panic("error on MkJSON")
 			}
 
 			//if jsonfile == "CensusCollection_0.xml" {
-			// os.WriteFile(fSf("record_%s.json", jsonfile), []byte(jsonstr), 0666)
+			// os.WriteFile(fSf("record_%s.json", jsonfile), []byte(str), 0666)
 			//}
 		}
 		return nil
 	})
 }
 
-func TestMinimize(t *testing.T) {
+func TestTryFmt(t *testing.T) {
 	type args struct {
-		jsonstr string
+		str string
 	}
 	tests := []struct {
 		name string
@@ -43,16 +43,54 @@ func TestMinimize(t *testing.T) {
 		{
 			name: "OK",
 			args: args{
-				jsonstr: `{    "Id": 1,    "Name": "Ahmad,   Ahmad", "Age": "2	1" 		 }`,
+				str: `{    "Id": 1,    "Name": "Ahmad,   Ahmad", "Age": "2	1" 	 }`,
 			},
 			want: `{"Id":1,"Name":"Ahmad,   Ahmad","Age":"2	1"}`,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Minimize(tt.args.jsonstr); got != tt.want {
-				t.Errorf("Minimize() = %v, want %v", got, tt.want)
-			}
+			got := TryFmtStr(tt.args.str, "  ")
+			fmt.Println(got)
+			got = FmtStr(tt.args.str, "  ")
+			fmt.Println(got)
+		})
+	}
+}
+
+func TestMinimize(t *testing.T) {
+	type args struct {
+		str string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		// TODO: Add test cases.
+		{
+			name: "OK",
+			args: args{
+				str: `{    "Id": 1,    "Name": "Ahmad,   Ahmad", "Age": "2	1" 		 }`,
+			},
+			want: `{"Id":1,"Name":"Ahmad,   Ahmad","Age":"2	1"}`,
+		},
+		{
+			name: "OK1",
+			args: args{
+				str: `   `,
+			},
+			want: ``,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := TryMinimize(tt.args.str)
+			fmt.Println(got)
+			got = Minimize(tt.args.str, false)
+			fmt.Println(got)
+			got = Minimize(tt.args.str, true)
+			fmt.Println(got)
 		})
 	}
 }

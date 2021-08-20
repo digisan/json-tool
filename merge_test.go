@@ -14,14 +14,14 @@ func TestMerge(t *testing.T) {
 	failOnErr("%v", err)
 
 	merged := MergeSgl(string(bytes1), string(bytes2), string(bytes3))
-	failOnErrWhen(!IsValid(merged), "%v", fEf("Invalid JSON"))
+	failOnErrWhen(!IsValidStr(merged), "%v", fEf("Invalid JSON"))
 	fPln(merged)
 }
 
 func TestScalarSel(t *testing.T) {
 	bytes, err := os.ReadFile("./data/itemResults.json")
 	failOnErr("%v", err)
-	jsonstr := string(bytes)
-	result := ScalarSelX(jsonstr, "School", "YrLevel", "Test Item RefID")
+	str := string(bytes)
+	result := ScalarSelX(str, "School", "YrLevel", "Test Item RefID")
 	fPln(result)
 }

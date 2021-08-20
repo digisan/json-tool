@@ -134,7 +134,7 @@ func ScanObject(ctx context.Context, r io.Reader, mustarray, check bool, style O
 			rst := ScanResult{}
 
 			// if invalid json, report to error
-			if check && !IsValid(object) {
+			if check && !IsValidStr(object) {
 				rst.Err = fEf("Error JSON @ \n%v\n", object)
 			}
 
@@ -144,9 +144,9 @@ func ScanObject(ctx context.Context, r io.Reader, mustarray, check bool, style O
 				case OUT_ORI:
 					break
 				case OUT_FMT:
-					object = Fmt(object, "  ")
+					object = FmtStr(object, "  ")
 				case OUT_MIN:
-					object = Minimize(object)
+					object = Minimize(object, false)
 				}
 				rst.Obj = object
 			}

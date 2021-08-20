@@ -13,22 +13,15 @@ func TestJSONBlkCont(t *testing.T) {
 
 	bytes, err := os.ReadFile("./data/Activity.json")
 	failOnErr("%v", err)
-	jsonstr := string(bytes)
+	str := string(bytes)
 
-	val, ok := SglEleAttrVal(jsonstr, "RefId", "-")
+	val, ok := SglEleAttrVal(str, "RefId", "-")
 	fPln(val, ok)
 
-	name, cont := SglEleBlkCont(jsonstr)
+	name, cont := SglEleBlkCont(str)
 	fPln("root", name)
 	fPln(cont)
 	fPln(" ------------------------- ")
-
-	out := MkSglEleBlk(name, "~~~", true)
-	fPln(out)
-
-	mav := map[string]interface{}{"a": "b", "c": 12}
-	xmlstr := Cvt2XML(out, mav)
-	fPln(xmlstr)
 
 	// names, values := JSONBreakBlkCont(cont)
 	// for i, name := range names {

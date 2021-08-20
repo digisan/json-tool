@@ -13,6 +13,6 @@ func TestComposite(t *testing.T) {
 	}
 	m, err := Flatten(data)
 	fmt.Println(len(m), err)
-	jsonstr := Composite(m)
-	os.WriteFile("./data/FlattenTest_Composite.json", []byte(jsonstr), os.ModePerm)
+	str := Composite(m)
+	os.WriteFile("./data/FlattenTest_Composite.json", []byte(str), os.ModePerm)
 }

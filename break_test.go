@@ -13,9 +13,9 @@ func TestJSONBreakArrCont(t *testing.T) {
 
 	bytes, err := os.ReadFile("./data/Activities.json")
 	failOnErr("%v", err)
-	jsonstr := string(bytes)
+	str := string(bytes)
 
-	values, ok := BreakArr(jsonstr)
+	values, ok := BreakArr(str)
 	fPln(ok)
 	for _, v := range values {
 		fPln(v)
@@ -26,9 +26,9 @@ func TestJSONBreakBlkContV2(t *testing.T) {
 	defer gotk.TrackTime(time.Now())
 
 	if bytes, err := os.ReadFile("./data/Activity.json"); err == nil {
-		// jsonstr := Fmt(string(bytes), "  ")
-		jsonstr := string(bytes)
-		_, cont := SglEleBlkCont(jsonstr)
+		// str := Fmt(string(bytes), "  ")
+		str := string(bytes)
+		_, cont := SglEleBlkCont(str)
 		names, values := BreakMulEleBlkV2(cont)
 		for i, name := range names {
 			fPln(MkSglEleBlk(name, values[i], true))

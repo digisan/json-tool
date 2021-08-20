@@ -4,28 +4,52 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/clbanning/mxj"
 	"github.com/digisan/gotk/slice/tu8"
 )
 
 // IsValid :
-func IsValid(str string) bool {
-	var js json.RawMessage
-	return json.Unmarshal([]byte(str), &js) == nil
+func IsValid(bytes []byte) bool {
+	var m interface{}
+	return json.Unmarshal(bytes, &m) == nil
+}
+
+func IsValidStr(str string) bool {
+	return IsValid([]byte(str))
 }
 
 // Fmt :
-func Fmt(jsonstr, indent string) string {
-	// jsonmap := make(map[string]interface{})
-	var jsonmap interface{}
-	json.Unmarshal([]byte(jsonstr), &jsonmap)
-	bytes, err := json.MarshalIndent(&jsonmap, "", indent)
+func Fmt(bytes []byte, indent string) []byte {
+	var m interface{}
+	err := json.Unmarshal(bytes, &m)
 	failOnErr("%v", err)
-	return string(bytes)
+	bytes, err = json.MarshalIndent(&m, "", indent)
+	failOnErr("%v", err)
+	return bytes
+}
+
+func FmtStr(str, indent string) string {
+	return string(Fmt([]byte(str), indent))
+}
+
+// TryFmt :
+func TryFmt(bytes []byte, indent string) []byte {
+	var m interface{}
+	if err := json.Unmarshal(bytes, &m); err != nil {
+		return bytes
+	}
+	bytes, err := json.MarshalIndent(&m, "", indent)
+	failOnErr("%v", err)
+	return bytes
+}
+
+func TryFmtStr(str, indent string) string {
+	return string(TryFmt([]byte(str), indent))
 }
 
 // Minimize :
-func Minimize(jsonstr string) string {
+func Minimize(str string, check bool) string {
+
+	failOnErrWhen(check && !IsValidStr(str), "%v", fEf("input string is invalid json string"))
 
 	var (
 		sb     = &strings.Builder{}
@@ -33,8 +57,8 @@ func Minimize(jsonstr string) string {
 		quotes = false
 	)
 
-	for i := 0; i < len(jsonstr); i++ {
-		c := jsonstr[i]
+	for i := 0; i < len(str); i++ {
+		c := str[i]
 		switch {
 		case c == '"' && pc != '\\':
 			quotes = !quotes
@@ -52,27 +76,11 @@ func Minimize(jsonstr string) string {
 	return sb.String()
 }
 
-// Cvt2XML :
-func Cvt2XML(jsonstr string, mav map[string]interface{}) string {
-
-	var jsonmap interface{}
-	json.Unmarshal([]byte(jsonstr), &jsonmap)
-	bytes, err := mxj.AnyXmlIndent(jsonmap, "", "    ", "")
-	failOnErr("%v", err)
-	xmlstr := string(bytes)
-	xmlstr = sReplaceAll(xmlstr, "<>", "")
-	xmlstr = sReplaceAll(xmlstr, "</>", "")
-	xmlstr = sTrim(xmlstr, " \t\n")
-
-	attrs := []string{}
-	for a, v := range mav {
-		attrs = append(attrs, fSf(`%s="%v"`, a, v))
+func TryMinimize(str string) string {
+	if !IsValidStr(str) {
+		return str
 	}
-	if p := sIndex(xmlstr, ">"); len(attrs) > 0 {
-		xmlstr = xmlstr[:p] + " " + sJoin(attrs, " ") + xmlstr[p:]
-	}
-
-	return xmlstr
+	return Minimize(str, false)
 }
 
 // MarshalRemove :
