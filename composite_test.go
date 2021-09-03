@@ -3,6 +3,7 @@ package jsontool
 import (
 	"fmt"
 	"os"
+	"strings"
 	"testing"
 )
 
@@ -14,7 +15,10 @@ func TestComposite(t *testing.T) {
 	m, err := Flatten(data)
 	fmt.Println(len(m), err)
 
-	str := CompositeIncl(m, "array.0.c", "object.a", "object1.object11.a")
+	str := Composite(m, func(path string) bool { return strings.Contains(path, "object") })
+	os.WriteFile("./data/FlattenTest_Composite.json", []byte(str), os.ModePerm)
+
+	str = CompositeIncl(m, "array.0.c", "object.a", "object1.object11.a")
 	os.WriteFile("./data/FlattenTest_CompositeIncl.json", []byte(str), os.ModePerm)
 
 	str = CompositeExcl(m, "array.0.c", "object.a", "object1.object11.a")
