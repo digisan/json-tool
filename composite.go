@@ -8,7 +8,7 @@ import (
 func Composite(m map[string]interface{}, filter func(path string) bool) string {
 	jsonbytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
 	for path, value := range m {
-		if filter != nil && filter(path) {
+		if (filter == nil) || (filter != nil && filter(path)) {
 			jsonbytes, _ = sjson.SetBytes(jsonbytes, path, value)
 		}
 	}
