@@ -6,10 +6,10 @@ require (
 	github.com/clbanning/mxj v1.8.4
 	github.com/digisan/gotk v0.0.38
 	github.com/digisan/logkit v0.0.2
-	github.com/tidwall/gjson v1.9.4 // indirect
+	github.com/tidwall/gjson v1.9.4
 	github.com/tidwall/pretty v1.2.0 // indirect
 	github.com/tidwall/sjson v1.2.2
-	golang.org/x/sys v0.0.0-20211007075335-d3039528d8ac // indirect
+	golang.org/x/sys v0.0.0-20211013075003-97ac67df715c // indirect
 )
 
 require (
