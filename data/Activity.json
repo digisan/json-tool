@@ -9,7 +9,8 @@
                 "-Units": "minute"
             },
             "FinishDate": "2002-09-12",
-            "StartDate": "2002-09-12"
+            "StartDate": "2002-09-12",
+            "ActivityWeight": 5
         },
         "ActivityWeight": 5,
         "AssessmentRefId": "03EDB29E-8116-B450-0435-FA87E42A0AD2",
@@ -19,11 +20,13 @@
         },
         "LearningResources": {
             "LearningResourceRefId": [
+                "B7337698-BF6D-B193-7F79-A07B87211B93",
                 "B7337698-BF6D-B193-7F79-A07B87211B93"
             ]
         },
         "LearningStandards": {
             "LearningStandardItemRefId": [
+                "9DB15CEA-B2C5-4F66-94C3-7D0A0CAEDDA4",
                 "9DB15CEA-B2C5-4F66-94C3-7D0A0CAEDDA4"
             ]
         },
