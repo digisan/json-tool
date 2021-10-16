@@ -23,6 +23,9 @@ func TestConditionalMod(t *testing.T) {
 	mFS := GetSiblingPath(js, "ActivityWeight", "StartDate", mSibling) // get all valid siblings for each 'ActivityWeight' path
 	fmt.Println(mFS)
 
+	mFSs := GetSiblingsPath(js, "ActivityWeight", mSibling, "StartDate", "FinishDate", "CreationDate")
+	fmt.Println(mFSs)
+
 	for k, v := range mFS {
 		js, _ = sjson.Set(js, k, 1000)                   // modify existing field 1
 		js, _ = sjson.Set(js, v, "2002-09-13")           // modify existing field 2

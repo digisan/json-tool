@@ -113,3 +113,27 @@ func GetSiblingPath(js, field, sibling string, mLvlSiblings map[int][]string) (m
 	}
 	return
 }
+
+// 'siblings' are all valid path in one fixed 'field' path sibling
+func GetSiblingsPath(js, field string, mLvlSiblings map[int][]string, siblings ...string) (mFieldSiblings map[string][]string) {
+
+	if mLvlSiblings == nil {
+		mLvlSiblings, _ = FamilyTree(js)
+	}
+
+	mFieldSiblingsCand := make(map[string][]string)
+	for _, sib := range siblings {
+		for fp, sp := range GetSiblingPath(js, field, sib, mLvlSiblings) {
+			mFieldSiblingsCand[fp] = append(mFieldSiblingsCand[fp], sp)
+		}
+	}
+
+	mFieldSiblings = make(map[string][]string)
+	for fp, sps := range mFieldSiblingsCand {
+		if len(sps) == len(siblings) {
+			mFieldSiblings[fp] = sps
+		}
+	}
+
+	return
+}
