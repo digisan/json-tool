@@ -12,6 +12,11 @@ func ParentPath(path string) string {
 	return sJoin(ss[:len(ss)-1], ".")
 }
 
+func FieldName(path string) string {
+	ss := sSplit(path, ".")
+	return ss[len(ss)-1]
+}
+
 func NewSibling(fieldPath, sibName string) string {
 	return ParentPath(fieldPath) + "." + sibName
 }
@@ -87,7 +92,7 @@ func GetFieldPaths(js, field string, mLvlSiblings map[int][]string) (paths []str
 	return
 }
 
-// 'sibling' is valid 'field' sibling
+// 'sibling' is valid 'field' path sibling
 func GetSiblingPath(js, field, sibling string, mLvlSiblings map[int][]string) (mFieldSibling map[string]string) {
 
 	if mLvlSiblings == nil {
@@ -136,4 +141,32 @@ func GetSiblingsPath(js, field string, mLvlSiblings map[int][]string, siblings .
 	}
 
 	return
+}
+
+// if return 'false', with the first uncovered sibling name
+func HasSiblings(js, fieldPath string, mLvlSiblings map[int][]string, siblings ...string) bool {
+	mFSs := GetSiblingsPath(js, FieldName(fieldPath), mLvlSiblings, siblings...)
+	if len(mFSs) == 0 {
+		return false
+	}
+
+	sibpaths := mFSs[fieldPath]
+NEXT:
+	for _, sib := range siblings {
+		for _, sibpath := range sibpaths {
+			if sib == FieldName(sibpath) {
+				continue NEXT
+			}
+		}
+		return false
+	}
+	return true
+}
+
+func PathExists(js, fieldPath string, mFamilyTree map[string][]string) bool {
+	if mFamilyTree == nil {
+		_, mFamilyTree = FamilyTree(js)
+	}
+	_, ok := mFamilyTree[fieldPath]
+	return ok
 }

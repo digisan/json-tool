@@ -4,35 +4,62 @@ import (
 	"fmt"
 	"os"
 	"testing"
-
-	"github.com/tidwall/sjson"
 )
+
+func TestFieldName(t *testing.T) {
+	name := FieldName("children.1.children.2.children.2.children.0.dcterms_title")
+	fmt.Println(name)
+	name = FieldName("children")
+	fmt.Println(name)
+}
+
+func TestHasSiblings(t *testing.T) {
+	data, err := os.ReadFile("./data/FlattenTest.json")
+	if err != nil {
+		panic(err)
+	}
+	js := string(data)
+	mSibling, mFamilyTree := FamilyTree(js)
+
+	ok := HasSiblings(js, "array.0.subarray.0.c", mSibling, "g", "f", "h")
+	fmt.Println(ok)
+	ok = HasSiblings(js, "array.0.subarray.1.aa", mSibling, "cc", "ee", "aa")
+	fmt.Println(ok)
+	ok = HasSiblings(js, "array.0.subarray", mSibling, "c", "a", "e")
+	fmt.Println(ok)
+
+	fmt.Println(PathExists(js, "array.0.subarray.1.aa", mFamilyTree))
+	fmt.Println(PathExists(js, "array.0.subarray.2.aaa", mFamilyTree))
+	fmt.Println(PathExists(js, "object.aa", mFamilyTree))
+}
 
 func TestConditionalMod(t *testing.T) {
 
-	data, err := os.ReadFile("./data/Activity.json")
+	data, err := os.ReadFile("./data/test.json")
 	if err != nil {
 		panic(err)
 	}
 	js := string(data)
 	mSibling, _ := FamilyTree(js)
 
-	paths := GetFieldPaths(js, "ActivityWeight", mSibling) // get all paths which contains field 'ActivityWeight'
-	fmt.Println(paths)
+	// paths := GetFieldPaths(js, "dcterms_title", mSibling) // get all paths which contains field 'dcterms_title'
+	// fmt.Println(paths)
 
-	mFS := GetSiblingPath(js, "ActivityWeight", "StartDate", mSibling) // get all valid siblings for each 'ActivityWeight' path
-	fmt.Println(mFS)
+	// mFS := GetSiblingPath(js, "dcterms_title", "asn_statementLabel", mSibling) // get all valid siblings for each 'dcterms_title' path
+	// fmt.Println(mFS)
 
-	mFSs := GetSiblingsPath(js, "ActivityWeight", mSibling, "StartDate", "FinishDate", "CreationDate")
-	fmt.Println(mFSs)
-
-	for k, v := range mFS {
-		js, _ = sjson.Set(js, k, 1000)                   // modify existing field 1
-		js, _ = sjson.Set(js, v, "2002-09-13")           // modify existing field 2
-		js, _ = sjson.Set(js, NewSibling(k, "HELLO"), 1) // create new field
+	mFSs := GetSiblingsPath(js, "dcterms_title", mSibling, "asn_statementLabel")
+	for fp, sps := range mFSs {
+		fmt.Println(fp, sps)
 	}
 
-	os.WriteFile("./data/ATest.json", []byte(js), os.ModePerm)
+	// for k, v := range mFS {
+	// 	js, _ = sjson.Set(js, k, 1000)                   // modify existing field 1
+	// 	js, _ = sjson.Set(js, v, "2002-09-13")           // modify existing field 2
+	// 	js, _ = sjson.Set(js, NewSibling(k, "HELLO"), 1) // create new field
+	// }
+
+	// os.WriteFile("./data/test_out.json", []byte(js), os.ModePerm)
 }
 
 func TestFamilyTree(t *testing.T) {
