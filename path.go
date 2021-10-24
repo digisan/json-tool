@@ -17,6 +17,10 @@ func FieldName(path string) string {
 	return ss[len(ss)-1]
 }
 
+func NewChild(fieldPath, childName string) string {
+	return fieldPath + "." + childName
+}
+
 // NewSibling : return a new created sibling path,
 // empty fieldPath return empty,
 // "." fieldPath creates a new field as sibName

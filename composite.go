@@ -1,6 +1,8 @@
 package jsontool
 
 import (
+	"log"
+
 	"github.com/digisan/gotk/slice/ts"
 	"github.com/tidwall/sjson"
 )
@@ -25,6 +27,26 @@ func Composite(m map[string]interface{}, fm func(path string, value interface{})
 				js, _ = sjson.Set(js, p, v)
 			} else if p != "" && raw {
 				js, _ = sjson.SetRaw(js, p, v.(string))
+			}
+		}
+	}
+	return js
+}
+
+func Composite2(m map[string]interface{}, fm func(path string, value interface{}) (p []string, v []interface{})) string {
+	js, _ := sjson.Set("", "", "") // empty json doc to reinflate with tuples
+	for path, value := range m {
+		if fm == nil {
+			js, _ = sjson.Set(js, path, value)
+		} else {
+			ps, vs := fm(path, value)
+			if len(ps) != len(vs) {
+				log.Fatalln("Composite2 [fm] return error")
+			}
+			for i, p := range ps {
+				if p != "" {
+					js, _ = sjson.Set(js, p, vs[i])
+				}
 			}
 		}
 	}
