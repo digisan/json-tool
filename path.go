@@ -17,12 +17,34 @@ func FieldName(path string) string {
 	return ss[len(ss)-1]
 }
 
-// NewSibling : return a new created sibling path
+// NewSibling : return a new created sibling path,
+// empty fieldPath return empty,
+// "." fieldPath creates a new field as sibName
 func NewSibling(fieldPath, sibName string) string {
+	if fieldPath == "" {
+		return ""
+	}
 	if pp := ParentPath(fieldPath); pp != "" {
-		return ParentPath(fieldPath) + "." + sibName
+		return pp + "." + sibName
 	}
 	return sibName
+}
+
+// NewUncle : return a new created uncle path
+// empty fieldPath return empty,
+// ".." fieldPath creates a new field as uncleName
+func NewUncle(fieldPath, uncleName string) string {
+	if fieldPath == "" {
+		return ""
+	}
+	pp := ParentPath(fieldPath)
+	if pp == "" {
+		return ""
+	}
+	if ppp := ParentPath(pp); ppp != "" {
+		return ppp + "." + uncleName
+	}
+	return uncleName
 }
 
 func FamilyTree(js string) (mLvlSiblings map[int][]string, mFamilyTree map[string][]string) {

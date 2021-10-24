@@ -10,6 +10,13 @@ func TestNewSibling(t *testing.T) {
 	fmt.Println(NewSibling("a.b.c.d", "c"))
 	fmt.Println(NewSibling("a", "c"))
 	fmt.Println(NewSibling("", "c"))
+	fmt.Println(NewSibling(".", "c"))
+	fmt.Println("------------------------")
+	fmt.Println(NewUncle("a.b.c.d", "e"))
+	fmt.Println(NewUncle("a.b.c", "e"))
+	fmt.Println(NewUncle("a", "c"))
+	fmt.Println(NewUncle("..", "c"))
+	fmt.Println(NewUncle(".", "c"))
 }
 
 func TestFieldName(t *testing.T) {
