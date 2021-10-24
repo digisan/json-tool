@@ -19,7 +19,10 @@ func FieldName(path string) string {
 
 // NewSibling : return a new created sibling path
 func NewSibling(fieldPath, sibName string) string {
-	return ParentPath(fieldPath) + "." + sibName
+	if pp := ParentPath(fieldPath); pp != "" {
+		return ParentPath(fieldPath) + "." + sibName
+	}
+	return sibName
 }
 
 func FamilyTree(js string) (mLvlSiblings map[int][]string, mFamilyTree map[string][]string) {

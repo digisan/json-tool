@@ -6,6 +6,12 @@ import (
 	"testing"
 )
 
+func TestNewSibling(t *testing.T) {
+	fmt.Println(NewSibling("a.b.c.d", "c"))
+	fmt.Println(NewSibling("a", "c"))
+	fmt.Println(NewSibling("", "c"))
+}
+
 func TestFieldName(t *testing.T) {
 	name := FieldName("children.1.children.2.children.2.children.0.dcterms_title")
 	fmt.Println(name)
