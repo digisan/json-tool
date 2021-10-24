@@ -18,8 +18,17 @@ func TestComposite(t *testing.T) {
 	str := Composite(m, nil)
 	os.WriteFile("./data/FlattenTest_Composite_1.json", []byte(str), os.ModePerm)
 
-	str = Composite(m, func(path string) bool { return strings.Contains(path, "object") })
-	os.WriteFile("./data/FlattenTest_Composite_2.json", []byte(str), os.ModePerm)
+	str = Composite(m,
+		func(path string, value interface{}) (string, interface{}, bool) {
+			if strings.Contains(path, "object") {
+				if value == "b" {
+					return NewSibling(path, "ABC"), value.(string) + "ABC", false
+				}
+				return path, value, false
+			}
+			return "", nil, false
+		})
+	fmt.Println(str)
 
 	str = CompositeIncl(m, "array.0.c", "object.a", "object1.object11.a")
 	os.WriteFile("./data/FlattenTest_CompositeIncl.json", []byte(str), os.ModePerm)

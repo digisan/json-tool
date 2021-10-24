@@ -5,14 +5,30 @@ import (
 	"github.com/tidwall/sjson"
 )
 
-func Composite(m map[string]interface{}, filter func(path string) bool) string {
-	jsonbytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
+// func Composite(m map[string]interface{}, filter func(path string) bool) string {
+// 	jsonbytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
+// 	for path, value := range m {
+// 		if (filter == nil) || (filter != nil && filter(path)) {
+// 			jsonbytes, _ = sjson.SetBytes(jsonbytes, path, value)
+// 		}
+// 	}
+// 	return string(jsonbytes)
+// }
+
+func Composite(m map[string]interface{}, fm func(path string, value interface{}) (p string, v interface{}, raw bool)) string {
+	js, _ := sjson.Set("", "", "") // empty json doc to reinflate with tuples
 	for path, value := range m {
-		if (filter == nil) || (filter != nil && filter(path)) {
-			jsonbytes, _ = sjson.SetBytes(jsonbytes, path, value)
+		if fm == nil {
+			js, _ = sjson.Set(js, path, value)
+		} else {
+			if p, v, raw := fm(path, value); p != "" && !raw {
+				js, _ = sjson.Set(js, p, v)
+			} else if p != "" && raw {
+				js, _ = sjson.SetRaw(js, p, v.(string))
+			}
 		}
 	}
-	return string(jsonbytes)
+	return js
 }
 
 func CompositeExcl(m map[string]interface{}, exclPaths ...string) string {
