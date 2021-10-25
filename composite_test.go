@@ -7,6 +7,29 @@ import (
 	"testing"
 )
 
+func TestTransform(t *testing.T) {
+
+	RegisterRule(`^array\.`, func(path string, value interface{}) (ok bool, ps []string, vs []interface{}) {
+		ok = true
+		ps = append(ps, "")
+		vs = append(vs, nil)
+		return
+	})
+
+	RegisterRule(`.*`, func(path string, value interface{}) (ok bool, ps []string, vs []interface{}) {
+		ok = GetStrVal(value) == "H"
+		ps = append(ps, "")
+		vs = append(vs, nil)
+		return
+	})
+
+	data, err := os.ReadFile("./data/FlattenTest.json")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(FmtStr(Transform(data), "\t"))
+}
+
 func TestComposite(t *testing.T) {
 	data, err := os.ReadFile("./data/FlattenTest.json")
 	if err != nil {
