@@ -9,15 +9,15 @@ import (
 
 func TestTransform(t *testing.T) {
 
-	RegisterRule(`^array\.`, func(path string, value interface{}) (ok bool, ps []string, vs []interface{}) {
-		ok = true
-		ps = append(ps, "")
-		vs = append(vs, nil)
+	RegisterRule(`.*`, func(path string, value interface{}) (ok bool, ps []string, vs []interface{}) {
+		ok = GetStrVal(value) == "H"
+		ps = append(ps, path)
+		vs = append(vs, "HH")
 		return
 	})
 
-	RegisterRule(`.*`, func(path string, value interface{}) (ok bool, ps []string, vs []interface{}) {
-		ok = GetStrVal(value) == "H"
+	RegisterRule(`^array\.`, func(path string, value interface{}) (ok bool, ps []string, vs []interface{}) {
+		ok = true
 		ps = append(ps, "")
 		vs = append(vs, nil)
 		return
@@ -27,7 +27,7 @@ func TestTransform(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(FmtStr(Transform(data), "\t"))
+	fmt.Println(FmtStr(TransformUnderAllRules(data), "\t"))
 }
 
 func TestComposite(t *testing.T) {
