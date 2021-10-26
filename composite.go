@@ -44,11 +44,15 @@ func RegisterRule(regexpStr string, f func(path string, value interface{}) (ok b
 	rules = append(rules, f)
 }
 
-func TransformUnderFirstRule(data []byte) string {
-	mData, err := Flatten(data)
-	if err != nil {
-		log.Fatalln(err)
+func TransformUnderFirstRule(mData map[string]interface{}, data []byte) string {
+
+	var err error
+	if mData == nil {
+		if mData, err = Flatten(data); err != nil {
+			log.Fatalln(err)
+		}
 	}
+
 	js, _ := sjson.Set("", "", "") // empty json doc to reinflate with tuples
 NEXT_PATH:
 	for path, value := range mData {
@@ -60,7 +64,9 @@ NEXT_PATH:
 					}
 					for i, p := range ps {
 						if p != "" { // non empty path, modify result
-							js, _ = sjson.Set(js, p, vs[i])
+							if js, err = sjson.Set(js, p, vs[i]); err != nil {
+								log.Fatalln(err)
+							}
 						}
 						// empty path ("") => delete this path
 					}
@@ -69,7 +75,9 @@ NEXT_PATH:
 			}
 		}
 		// no ruled, keep original path-value, ignore further processing
-		js, _ = sjson.Set(js, path, value)
+		if js, err = sjson.Set(js, path, value); err != nil {
+			log.Fatalln(err)
+		}
 	}
 	return js
 }
@@ -106,11 +114,15 @@ NEXT_PATH:
 // 	return js
 // }
 
-func TransformUnderAllRules(data []byte) string {
-	mData, err := Flatten(data)
-	if err != nil {
-		log.Fatalln(err)
+func TransformUnderAllRules(mData map[string]interface{}, data []byte) string {
+
+	var err error
+	if mData == nil {
+		if mData, err = Flatten(data); err != nil {
+			log.Fatalln(err)
+		}
 	}
+
 	js, _ := sjson.Set("", "", "") // empty json doc to reinflate with tuples
 	for iR, rule := range rules {
 		js, _ = sjson.Set("", "", "")
@@ -122,15 +134,21 @@ func TransformUnderAllRules(data []byte) string {
 					}
 					for i, p := range ps {
 						if p != "" { // non empty path, modify result
-							js, _ = sjson.Set(js, p, vs[i])
+							if js, err = sjson.Set(js, p, vs[i]); err != nil {
+								log.Fatalln(err)
+							}
 						}
 						// empty path ("") => delete original path
 					}
 				} else { // no ok, keep original path-value, ignore further processing
-					js, _ = sjson.Set(js, path, value)
+					if js, err = sjson.Set(js, path, value); err != nil {
+						log.Fatalln(err)
+					}
 				}
 			} else { // no focused, keep original path-value, ignore further processing
-				js, _ = sjson.Set(js, path, value)
+				if js, err = sjson.Set(js, path, value); err != nil {
+					log.Fatalln(err)
+				}
 			}
 		}
 		if mData, err = FlattenStr(js); err != nil {

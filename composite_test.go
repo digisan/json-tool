@@ -27,7 +27,7 @@ func TestTransform(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(FmtStr(TransformUnderAllRules(data), "\t"))
+	fmt.Println(FmtStr(TransformUnderFirstRule(nil, data), "\t"))
 }
 
 func TestComposite(t *testing.T) {
