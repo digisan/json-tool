@@ -95,12 +95,7 @@ func FamilyTree(js string) (mLvlSiblings map[int][]string, mFamilyTree map[strin
 	return
 }
 
-func GetFieldPaths(js, field string, mLvlSiblings map[int][]string) (paths []string) {
-
-	if mLvlSiblings == nil {
-		mLvlSiblings, _ = FamilyTree(js)
-	}
-
+func GetFieldPaths(field string, mLvlSiblings map[int][]string) (paths []string) {
 	const MAX_LEVEL = 1024
 	for l := 0; l < MAX_LEVEL; l++ {
 		if len(mLvlSiblings[l]) > 0 {
@@ -123,26 +118,18 @@ func GetFieldPaths(js, field string, mLvlSiblings map[int][]string) (paths []str
 }
 
 // 'sibling' is valid 'field' path sibling
-func GetSiblingPath(js, field, sibling string, mLvlSiblings map[int][]string) (mFieldSibling map[string]string) {
-
-	if mLvlSiblings == nil {
-		mLvlSiblings, _ = FamilyTree(js)
-	}
+func GetSiblingPath(field, sibling string, mLvlSiblings map[int][]string) (mFieldSibling map[string]string) {
 
 	mFieldSibling = make(map[string]string)
 	sPathsCandidates := []string{}
-	for _, p := range GetFieldPaths(js, field, mLvlSiblings) {
-		if sContains(p, ".") {
-			sPathsCandidates = append(sPathsCandidates, NewSibling(p, sibling))
-		}
+	for _, p := range GetFieldPaths(field, mLvlSiblings) {
+		sPathsCandidates = append(sPathsCandidates, NewSibling(p, sibling))
 	}
 	const MAX_LEVEL = 1024
 	for l := 0; l < MAX_LEVEL; l++ {
-		if len(mLvlSiblings[l]) > 0 {
-			for _, sib := range mLvlSiblings[l] {
-				if ts.In(sib, sPathsCandidates...) {
-					mFieldSibling[NewSibling(sib, field)] = sib
-				}
+		for _, sib := range mLvlSiblings[l] {
+			if ts.In(sib, sPathsCandidates...) {
+				mFieldSibling[NewSibling(sib, field)] = sib
 			}
 		}
 	}
@@ -150,15 +137,11 @@ func GetSiblingPath(js, field, sibling string, mLvlSiblings map[int][]string) (m
 }
 
 // 'siblings' are all valid path in one fixed 'field' path sibling
-func GetSiblingsPath(js, field string, mLvlSiblings map[int][]string, siblings ...string) (mFieldSiblings map[string][]string) {
-
-	if mLvlSiblings == nil {
-		mLvlSiblings, _ = FamilyTree(js)
-	}
+func GetSiblingsPath(field string, mLvlSiblings map[int][]string, siblings ...string) (mFieldSiblings map[string][]string) {
 
 	mFieldSiblingsCand := make(map[string][]string)
 	for _, sib := range siblings {
-		for fp, sp := range GetSiblingPath(js, field, sib, mLvlSiblings) {
+		for fp, sp := range GetSiblingPath(field, sib, mLvlSiblings) {
 			mFieldSiblingsCand[fp] = append(mFieldSiblingsCand[fp], sp)
 		}
 	}
@@ -174,8 +157,8 @@ func GetSiblingsPath(js, field string, mLvlSiblings map[int][]string, siblings .
 }
 
 // if return 'false', with the first uncovered sibling name
-func HasSiblings(js, fieldPath string, mLvlSiblings map[int][]string, siblings ...string) bool {
-	mFSs := GetSiblingsPath(js, FieldName(fieldPath), mLvlSiblings, siblings...)
+func HasSiblings(fieldPath string, mLvlSiblings map[int][]string, siblings ...string) bool {
+	mFSs := GetSiblingsPath(FieldName(fieldPath), mLvlSiblings, siblings...)
 	if len(mFSs) == 0 {
 		return false
 	}
@@ -193,10 +176,7 @@ NEXT:
 	return true
 }
 
-func PathExists(js, fieldPath string, mFamilyTree map[string][]string) bool {
-	if mFamilyTree == nil {
-		_, mFamilyTree = FamilyTree(js)
-	}
+func PathExists(fieldPath string, mFamilyTree map[string][]string) bool {
 	_, ok := mFamilyTree[fieldPath]
 	return ok
 }

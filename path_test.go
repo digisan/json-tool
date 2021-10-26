@@ -34,34 +34,41 @@ func TestHasSiblings(t *testing.T) {
 	js := string(data)
 	mSibling, mFamilyTree := FamilyTree(js)
 
-	ok := HasSiblings(js, "array.0.subarray.0.c", mSibling, "g", "f", "h")
+	ok := HasSiblings("array", mSibling, "array1", "array2")
 	fmt.Println(ok)
-	ok = HasSiblings(js, "array.0.subarray.1.aa", mSibling, "cc", "ee", "aa")
+	ok = HasSiblings("array.0.subarray.0.c", mSibling, "g", "f", "h")
 	fmt.Println(ok)
-	ok = HasSiblings(js, "array.0.subarray", mSibling, "c", "a", "e")
+	ok = HasSiblings("array.0.subarray.1.aa", mSibling, "cc", "ee", "aa")
+	fmt.Println(ok)
+	ok = HasSiblings("array.0.subarray", mSibling, "c", "a", "e")
 	fmt.Println(ok)
 
-	fmt.Println(PathExists(js, "array.0.subarray.1.aa", mFamilyTree))
-	fmt.Println(PathExists(js, "array.0.subarray.2.aaa", mFamilyTree))
-	fmt.Println(PathExists(js, "object.aa", mFamilyTree))
+	fmt.Println(PathExists("array.0.subarray.1.aa", mFamilyTree))
+	fmt.Println(PathExists("array.0.subarray.2.aaa", mFamilyTree))
+	fmt.Println(PathExists("object.aa", mFamilyTree))
 }
 
 func TestConditionalMod(t *testing.T) {
 
-	data, err := os.ReadFile("./data/test.json")
+	data, err := os.ReadFile("./data/FlattenTest.json")
 	if err != nil {
 		panic(err)
 	}
 	js := string(data)
 	mSibling, _ := FamilyTree(js)
 
-	// paths := GetFieldPaths(js, "dcterms_title", mSibling) // get all paths which contains field 'dcterms_title'
+	// paths := GetFieldPaths("dcterms_title", mSibling) // get all paths which contains field 'dcterms_title'
 	// fmt.Println(paths)
 
-	// mFS := GetSiblingPath(js, "dcterms_title", "asn_statementLabel", mSibling) // get all valid siblings for each 'dcterms_title' path
+	// mFS := GetSiblingPath("dcterms_title", "asn_statementLabel", mSibling) // get all valid siblings for each 'dcterms_title' path
 	// fmt.Println(mFS)
 
-	mFSs := GetSiblingsPath(js, "dcterms_title", mSibling, "asn_statementLabel")
+	mFSs := GetSiblingsPath("array", mSibling, "array1")
+	for fp, sps := range mFSs {
+		fmt.Println(fp, sps)
+	}
+
+	mFSs = GetSiblingsPath("c", mSibling, "e", "h")
 	for fp, sps := range mFSs {
 		fmt.Println(fp, sps)
 	}
