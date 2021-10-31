@@ -3,12 +3,16 @@ package jsontool
 import (
 	"log"
 
+	"github.com/digisan/gotk"
 	"github.com/digisan/gotk/slice/ts"
 )
 
 // for json path sep by dot(.)
 func ParentPath(path string) string {
 	ss := sSplit(path, ".")
+	if gotk.IsNumeric(ss[len(ss)-2]) {
+		return sJoin(ss[:len(ss)-2], ".")
+	}
 	return sJoin(ss[:len(ss)-1], ".")
 }
 

@@ -139,3 +139,58 @@ func TestFamilyTree(t *testing.T) {
 	// 	}
 	// }
 }
+
+func TestParentPath(t *testing.T) {
+	type args struct {
+		path string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		// TODO: Add test cases.
+		{
+			name: "",
+			args: args{
+				path: "a.b.c.d",
+			},
+			want: "a.b.c",
+		},
+		{
+			name: "",
+			args: args{
+				path: "a.b.c.d.3.e",
+			},
+			want: "a.b.c.d",
+		},
+		{
+			name: "",
+			args: args{
+				path: "a.b.c.2.d.3.e",
+			},
+			want: "a.b.c.2.d",
+		},
+		{
+			name: "",
+			args: args{
+				path: "c.1.c.2.c.3.c.4.c.5.f",
+			},
+			want: "c.1.c.2.c.3.c.4.c",
+		},
+		{
+			name: "",
+			args: args{
+				path: "c.1.c.2.c.3.c.4.c.5",
+			},
+			want: "c.1.c.2.c.3.c.4.c",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ParentPath(tt.args.path); got != tt.want {
+				t.Errorf("ParentPath() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
