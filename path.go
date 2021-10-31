@@ -10,8 +10,10 @@ import (
 // for json path sep by dot(.)
 func ParentPath(path string) string {
 	ss := sSplit(path, ".")
-	if gotk.IsNumeric(ss[len(ss)-2]) {
-		return sJoin(ss[:len(ss)-2], ".")
+	if len(ss) >= 2 {
+		if gotk.IsNumeric(ss[len(ss)-2]) {
+			return sJoin(ss[:len(ss)-2], ".")
+		}
 	}
 	return sJoin(ss[:len(ss)-1], ".")
 }
@@ -32,10 +34,9 @@ func NewSibling(fieldPath, sibName string) string {
 	if fieldPath == "" {
 		return ""
 	}
-	if pp := ParentPath(fieldPath); pp != "" {
-		return pp + "." + sibName
-	}
-	return sibName
+	ss := sSplit(fieldPath, ".")
+	sibPath := sJoin(ss[:len(ss)-1], ".") + "." + sibName
+	return sTrimLeft(sibPath, ".")
 }
 
 // NewUncle : return a new created uncle path
@@ -49,10 +50,7 @@ func NewUncle(fieldPath, uncleName string) string {
 	if pp == "" {
 		return ""
 	}
-	if ppp := ParentPath(pp); ppp != "" {
-		return ppp + "." + uncleName
-	}
-	return uncleName
+	return NewSibling(pp, uncleName)
 }
 
 func FamilyTree(js string) (mLvlSiblings map[int][]string, mFamilyTree map[string][]string) {

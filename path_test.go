@@ -11,7 +11,10 @@ func TestNewSibling(t *testing.T) {
 	fmt.Println(NewSibling("a", "c"))
 	fmt.Println(NewSibling("", "c"))
 	fmt.Println(NewSibling(".", "c"))
-	fmt.Println("------------------------")
+}
+
+func TestNewUncle(t *testing.T) {
+	fmt.Println(NewUncle("a.0.b.1.c.2.d", "CC"))
 	fmt.Println(NewUncle("a.b.c.d", "e"))
 	fmt.Println(NewUncle("a.b.c", "e"))
 	fmt.Println(NewUncle("a", "c"))
@@ -150,6 +153,20 @@ func TestParentPath(t *testing.T) {
 		want string
 	}{
 		// TODO: Add test cases.
+		{
+			name: "",
+			args: args{
+				path: "",
+			},
+			want: "",
+		},
+		{
+			name: "",
+			args: args{
+				path: "a",
+			},
+			want: "",
+		},
 		{
 			name: "",
 			args: args{
