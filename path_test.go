@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"testing"
+
+	"github.com/digisan/gotk/slice/ts"
 )
 
 func TestNewSibling(t *testing.T) {
@@ -49,6 +51,41 @@ func TestHasSiblings(t *testing.T) {
 	fmt.Println(PathExists("array.0.subarray.1.aa", mFamilyTree))
 	fmt.Println(PathExists("array.0.subarray.2.aaa", mFamilyTree))
 	fmt.Println(PathExists("object.aa", mFamilyTree))
+}
+
+func TestGetFieldPaths(t *testing.T) {
+	data, err := os.ReadFile("./data/sif.json")
+	if err != nil {
+		panic(err)
+	}
+	js := string(data)
+	mSibling, _ := FamilyTree(js)
+	paths, _ := GetAllLeafPaths(js)
+
+	lookfor := "value"
+
+	fpaths1 := GetFieldPaths(lookfor, mSibling)
+	fmt.Println(len(fpaths1))
+	for _, p := range fpaths1 {
+		fmt.Println(p)
+	}
+
+	fmt.Println("--------------------------------")
+
+	fpaths2 := GetLeafPathsOrderly(lookfor, paths)
+	fmt.Println(len(fpaths2))
+	for _, p := range fpaths2 {
+		fmt.Println(p)
+	}
+
+	fmt.Println("--------------------------------")
+
+	fmt.Println(ts.Equal(fpaths1, fpaths2))
+
+	fmt.Println(ts.Minus(fpaths1, fpaths2))
+
+	fmt.Println(ts.Minus(fpaths2, fpaths1))
+
 }
 
 func TestConditionalMod(t *testing.T) {
@@ -209,5 +246,19 @@ func TestParentPath(t *testing.T) {
 				t.Errorf("ParentPath() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestGetAllLeafPaths(t *testing.T) {
+	data, err := os.ReadFile("./data/FlattenTest.json")
+	if err != nil {
+		panic(err)
+	}
+	js := string(data)
+	paths, values := GetAllLeafPaths(js)
+	fmt.Println(len(paths))
+	for i, p := range paths {
+		v := values[i]
+		fmt.Printf("%02d --- %v: %v\n", i, p, v.String())
 	}
 }

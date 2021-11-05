@@ -2,9 +2,11 @@ package jsontool
 
 import (
 	"log"
+	"regexp"
 
 	"github.com/digisan/gotk"
 	"github.com/digisan/gotk/slice/ts"
+	"github.com/tidwall/gjson"
 )
 
 // for json path sep by dot(.)
@@ -99,19 +101,12 @@ func FamilyTree(js string) (mLvlSiblings map[int][]string, mFamilyTree map[strin
 
 func GetFieldPaths(field string, mLvlSiblings map[int][]string) (paths []string) {
 	const MAX_LEVEL = 1024
+	rField := regexp.MustCompile(fSf(`\.%s(\.\d+)*$`, field))
 	for l := 0; l < MAX_LEVEL; l++ {
 		if len(mLvlSiblings[l]) > 0 {
 			for _, sib := range mLvlSiblings[l] {
-				switch {
-				case sib == field:
+				if rField.MatchString(sib) || sib == field {
 					paths = append(paths, sib)
-				case sHasSuffix(sib, "."+field):
-					paths = append(paths, sib)
-				default:
-					// r := regexp.MustCompile(fmt.Sprintf(`.+\.%s\.\d+$`, field))
-					// if r.MatchString(sib) {
-					// 	paths = append(paths, sib)
-					// }
 				}
 			}
 		}
@@ -181,4 +176,58 @@ NEXT:
 func PathExists(fieldPath string, mFamilyTree map[string][]string) bool {
 	_, ok := mFamilyTree[fieldPath]
 	return ok
+}
+
+func GetAllLeafPaths(js string) (paths []string, values []gjson.Result) {
+	iteratePath(js, "", true, false, &paths, &values)
+	return
+}
+
+func iteratePath(js, ppath string, first, array bool, paths *[]string, values *[]gjson.Result) {
+
+	path := ""
+	idx := 0
+
+	gjson.Get(js, "@this").ForEach(func(key, value gjson.Result) bool {
+
+		kstr := key.String()
+
+		if first {
+			path = kstr
+		} else {
+			if kstr == "" {
+				if array {
+					path = fSf(`%s.%d`, ppath, idx)
+					idx++
+				} else {
+					path = ppath
+				}
+			} else {
+				path = fSf(`%s.%s`, ppath, kstr)
+			}
+		}
+
+		switch {
+		case value.IsArray():
+			for i, ele := range value.Array() {
+				elestr := ele.Raw
+				ipath := fSf("%s.%d", path, i)
+				iteratePath(elestr, ipath, false, elestr[0] == '[', paths, values)
+			}
+		case value.IsObject():
+			iteratePath(value.String(), path, false, false, paths, values)
+		default:
+			// fmt.Println(path, value)
+			*paths = append(*paths, path)
+			*values = append(*values, value)
+		}
+		return true
+	})
+}
+
+func GetLeafPathsOrderly(field string, paths []string) []string {
+	rField := regexp.MustCompile(fSf(`\.%s(\.\d+)*$`, field))
+	return ts.FM(paths, func(i int, e string) bool {
+		return rField.MatchString(e) || field == e
+	}, nil)
 }

@@ -1,4 +1,34 @@
 {
+    "array0": [
+        1,
+        null,
+        false,
+        "abc",
+        [
+            1,
+            null,
+            false,
+            "abc"
+        ],
+        [
+            [
+                1,
+                null,
+                false,
+                "abc"
+            ]
+        ],
+        [
+            [
+                [
+                    1,
+                    null,
+                    false,
+                    "abc"
+                ]
+            ]
+        ]
+    ],
     "array1": [
         1,
         null,
@@ -6,7 +36,11 @@
         "abc"
     ],
     "array2": [
+        7,
+        8,
+        "ok",
         [
+            1,
             2,
             "foo",
             true,
@@ -14,6 +48,7 @@
         ],
         [
             1,
+            2,
             null,
             false,
             "abc",
@@ -21,7 +56,16 @@
                 "obj": {
                     "attr": "innervalue"
                 }
-            }
+            },
+            [
+                [
+                    1,
+                    2,
+                    3,
+                    true,
+                    "innerarray"
+                ]
+            ]
         ]
     ],
     "array": [
