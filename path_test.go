@@ -262,3 +262,112 @@ func TestGetAllLeafPaths(t *testing.T) {
 		fmt.Printf("%02d --- %v: %v\n", i, p, v.String())
 	}
 }
+
+func TestOPath2TPath(t *testing.T) {
+	type args struct {
+		op  string
+		sep string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantTp  string
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+		{
+			name: "",
+			args: args{
+				op:  "a",
+				sep: ".",
+			},
+			wantTp:  "a",
+			wantErr: false,
+		},
+		{
+			name: "",
+			args: args{
+				op:  "a.b.1.c.3.d",
+				sep: ".",
+			},
+			wantTp:  "a.b.c.d",
+			wantErr: false,
+		},
+		{
+			name: "",
+			args: args{
+				op:  "a.b.1.c.3.0.d",
+				sep: ".",
+			},
+			wantTp:  "a.b.c.d",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotTp, err := OPath2TPath(tt.args.op, tt.args.sep)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("OPath2TPath() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if gotTp != tt.wantTp {
+				t.Errorf("OPath2TPath() = %v, want %v", gotTp, tt.wantTp)
+			}
+		})
+	}
+}
+
+func TestLastSegMod(t *testing.T) {
+	type args struct {
+		path string
+		sep  string
+		f    func(last string) string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		// TODO: Add test cases.
+		{
+			name: "",
+			args: args{
+				path: "a.b.c.d",
+				sep:  ".",
+				f: func(last string) string {
+					return "@" + last
+				},
+			},
+			want: "a.b.c.@d",
+		},
+		{
+			name: "",
+			args: args{
+				path: "a",
+				sep:  ".",
+				f: func(last string) string {
+					return "@" + last
+				},
+			},
+			want: "@a",
+		},
+		{
+			name: "",
+			args: args{
+				path: "",
+				sep:  ".",
+				f: func(last string) string {
+					return "@" + last
+				},
+			},
+			want: "@",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := LastSegMod(tt.args.path, tt.args.sep, tt.args.f); got != tt.want {
+				t.Errorf("LastSegMod() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

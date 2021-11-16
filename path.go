@@ -1,6 +1,7 @@
 package jsontool
 
 import (
+	"fmt"
 	"log"
 	"regexp"
 
@@ -8,6 +9,33 @@ import (
 	"github.com/digisan/gotk/slice/ts"
 	"github.com/tidwall/gjson"
 )
+
+func LastSegMod(path, sep string, f func(last string) string) string {
+	ss := sSplit(path, sep)
+	ss[len(ss)-1] = f(ss[len(ss)-1])
+	return sJoin(ss, sep)
+}
+
+func OPath2TPath(op, sep string) (tp string, err error) {
+	iNumGrp := []int{}
+	ss := []string{}
+	for i, s := range sSplit(op, sep) {
+		if !gotk.IsNumeric(s) {
+			ss = append(ss, s)
+		} else {
+			iNumGrp = append(iNumGrp, i)
+		}
+	}
+	if len(iNumGrp) > 1 {
+		for i := 1; i < len(iNumGrp); i++ {
+			prev, curr := iNumGrp[i-1], iNumGrp[i]
+			if curr-prev == 1 {
+				err = fmt.Errorf("array as another array's element cannot be converted to TypePath")
+			}
+		}
+	}
+	return sJoin(ss, sep), err
+}
 
 // for json path sep by dot(.)
 func ParentPath(path string) string {
