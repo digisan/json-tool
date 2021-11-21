@@ -60,7 +60,7 @@ func TestGetFieldPaths(t *testing.T) {
 	}
 	js := string(data)
 	mSibling, _ := FamilyTree(js)
-	paths, _ := GetAllLeafPaths(js)
+	paths, _ := GetLeavesPathOrderly(js)
 
 	lookfor := "value"
 
@@ -255,7 +255,7 @@ func TestGetAllLeafPaths(t *testing.T) {
 		panic(err)
 	}
 	js := string(data)
-	paths, values := GetAllLeafPaths(js)
+	paths, values := GetLeavesPathOrderly(js)
 	fmt.Println(len(paths))
 	for i, p := range paths {
 		v := values[i]
@@ -370,4 +370,40 @@ func TestLastSegMod(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestGetProperties(t *testing.T) {
+	data, err := os.ReadFile("./data/complex.json")
+	if err != nil {
+		panic(err)
+	}
+	js := string(data)
+	properties, locPseudo, mPropLocs, mPropValues := GetProperties(js)
+	fmt.Println()
+	fmt.Println(properties)
+	fmt.Println()
+	fmt.Println(locPseudo)
+	fmt.Println()
+	fmt.Println(mPropLocs["Object"])
+	fmt.Println()
+	// fmt.Println(mPropValues)
+	// fmt.Println()
+
+	fmt.Println(mPropValues["Object"][0])
+	fmt.Println(mPropValues["Object"][1])
+	fmt.Println(mPropValues["Object1"][0])
+
+	fmt.Println(mPropValues["problems"][0])
+}
+
+func TestRemoveParent(t *testing.T) {
+	data, err := os.ReadFile("./data/complex.json")
+	if err != nil {
+		panic(err)
+	}
+	js := string(data)
+	_, _, mPropLocs, mPropValues := GetProperties(js)
+	js = RemoveParent(js, "Object", mPropLocs, mPropValues)
+	fmt.Println(js)
+	os.WriteFile("./data/complex_out.json", []byte(js), os.ModePerm)
 }

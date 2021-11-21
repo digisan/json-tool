@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strconv"
 
 	"github.com/digisan/gotk"
 	"github.com/digisan/gotk/slice/ts"
+	strs "github.com/digisan/gotk/strings"
 	"github.com/tidwall/gjson"
 )
 
@@ -206,7 +208,7 @@ func PathExists(fieldPath string, mFamilyTree map[string][]string) bool {
 	return ok
 }
 
-func GetAllLeafPaths(js string) (paths []string, values []gjson.Result) {
+func GetLeavesPathOrderly(js string) (paths []string, values []gjson.Result) {
 	iteratePath(js, "", true, false, &paths, &values)
 	return
 }
@@ -253,9 +255,208 @@ func iteratePath(js, ppath string, first, array bool, paths *[]string, values *[
 	})
 }
 
-func GetLeafPathsOrderly(field string, paths []string) []string {
+func GetLeafPathsOrderly(field string, allPaths []string) []string {
 	rField := regexp.MustCompile(fSf(`\.%s(\.\d+)*$`, field))
-	return ts.FM(paths, func(i int, e string) bool {
+	return ts.FM(allPaths, func(i int, e string) bool {
 		return rField.MatchString(e) || field == e
 	}, nil)
+}
+
+////////////////////////////////////////////////////////////////////////////
+
+func getNearPos4OA(js string, start int) (start4val, end int) {
+	var open, close byte = '*', '*'
+	inDQ := false
+	n := 0
+	s4c := -1
+	for p := start; p < len(js); p++ {
+		c := js[p]
+		if !inDQ && c == '"' && js[p-1] != '\\' {
+			inDQ = true
+			continue
+		} else if inDQ && c == '"' && js[p-1] != '\\' {
+			inDQ = false
+			continue
+		}
+		if !inDQ {
+			switch c {
+
+			case '{', '[':
+				if open == '*' {
+					open = c
+				}
+				if close == '*' {
+					if open == '{' {
+						close = '}'
+					} else {
+						close = ']'
+					}
+				}
+				if c == open {
+					n++
+				}
+				if s4c == -1 {
+					s4c = p
+				}
+
+			case close:
+				n--
+				if n == 0 {
+					return s4c, p + 1
+				}
+			}
+		}
+	}
+	return s4c, -1
+}
+
+func GetProperties(js string) (
+	properties []string,
+	loc [][2]int,
+	mPropLocs map[string][][3]int, // start, start4value, end
+	mPropValues map[string][]interface{},
+) {
+
+	var (
+		rProperty = regexp.MustCompile(`"[^"]*"\s*:\s*[\{\["\-\dtfn]`)
+		rKVstr    = regexp.MustCompile(`^"[^"]*"\s*:\s*"[^"]*"\s*,?`)
+		rKVnum    = regexp.MustCompile(`^"[^"]*"\s*:\s*\-?\d+\.?\d*\s*,?`)
+		rKVbool   = regexp.MustCompile(`^"[^"]*"\s*:\s*[(true)|(false)]\s*,?`)
+		rKVnull   = regexp.MustCompile(`^"[^"]*"\s*:\s*null\s*,?`)
+		rKVobj    = regexp.MustCompile(`^"[^"]*"\s*:\s*\{`)
+		rKVarr    = regexp.MustCompile(`^"[^"]*"\s*:\s*\[`)
+	)
+
+	Idx := 0
+	mPropIdx := make(map[string][]int)
+
+	rProperty.ReplaceAllStringFunc(js, func(s string) string {
+		s = s[:sLastIndex(s, ":")]
+		s = sTrimPrefix(s, "\"")
+		s = sTrimRight(s, " \t")
+		s = sTrimSuffix(s, "\"")
+		properties = append(properties, s)
+		mPropIdx[s] = append(mPropIdx[s], Idx)
+		Idx++
+		return ""
+	})
+
+	mPropLocs = make(map[string][][3]int)
+	for i, p := range rProperty.FindAllStringIndex(js, -1) {
+		loc = append(loc, [2]int{p[0], -1})
+
+		for prop, indices := range mPropIdx {
+			for _, idx := range indices {
+				if i == idx {
+					mPropLocs[prop] = append(mPropLocs[prop], [3]int{p[0], -1, -1})
+				}
+			}
+		}
+	}
+
+	mPropValues = make(map[string][]interface{})
+NEXT_PROP:
+	for prop, locs := range mPropLocs {
+		for _, loc := range locs {
+			temp := js[loc[0]:]
+
+			if s := rKVstr.FindString(temp); s != "" {
+
+				ps, _ := strs.IndexAll(s, "\"")
+				mPropValues[prop] = append(mPropValues[prop], s[ps[2]+1:ps[3]])
+
+			} else if s := rKVnum.FindString(temp); s != "" {
+
+				s = sTrimSuffix(s, ",")
+				p := sLastIndex(s, ":")
+				numstr := sTrim(s[p+1:], " \t\n")
+				num, err := strconv.ParseFloat(numstr, 64)
+				if err != nil {
+					panic(err)
+				}
+				mPropValues[prop] = append(mPropValues[prop], num)
+
+			} else if s := rKVbool.FindString(temp); s != "" {
+
+				s = sTrimSuffix(s, ",")
+				p := sLastIndex(s, ":")
+				boolstr := sTrim(s[p+1:], " \t\n")
+				b, err := strconv.ParseBool(boolstr)
+				if err != nil {
+					panic(err)
+				}
+				mPropValues[prop] = append(mPropValues[prop], b)
+
+			} else if s := rKVnull.FindString(temp); s != "" {
+
+				mPropValues[prop] = append(mPropValues[prop], nil)
+
+			} else if rKVobj.MatchString(temp) {
+
+				mPropValues[prop] = append(mPropValues[prop], "#OBJECT")
+
+			} else if rKVarr.MatchString(temp) {
+
+				mPropValues[prop] = append(mPropValues[prop], "#ARRAY")
+
+			} else {
+
+				continue NEXT_PROP
+
+			}
+		}
+	}
+
+	////////////////////////////////////////////////////////////////
+
+	// update end position for [object] & [array]
+	for prop, vals := range mPropValues {
+
+		// if prop == "labs" {
+		// 	fmt.Println("DEBUG")
+		// }
+
+		for i, val := range vals {
+			switch sv := val.(type) {
+			case string:
+				if ts.In(sv, "#OBJECT", "#ARRAY") {
+
+					start := mPropLocs[prop][i][0]
+					s4c, end := getNearPos4OA(js, start)
+					mPropLocs[prop][i][1] = s4c
+					mPropLocs[prop][i][2] = end
+
+				} else {
+					// simple string
+				}
+			default: // other type
+			}
+		}
+	}
+
+	// update value content for [object] & [array]
+	for prop, locs := range mPropLocs {
+		for i, loc := range locs {
+			s4c, e := loc[1], loc[2]
+			if e != -1 {
+				mPropValues[prop][i] = js[s4c:e]
+			}
+		}
+	}
+
+	return
+}
+
+func RemoveParent(js, field string, mPropLocs map[string][][3]int, mPropValues map[string][]interface{}) string {
+	locs := [][2]int{}
+	for _, loc := range mPropLocs[field] {
+		locs = append(locs, [2]int{loc[0], loc[2]})
+	}
+	vals := []string{}
+	for _, val := range mPropValues[field] {
+		sval := val.(string)
+		sval = sTrim(sval, "{}")
+		vals = append(vals, sval)
+	}
+	return strs.RangeReplace(js, locs, vals)
 }

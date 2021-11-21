@@ -29,7 +29,7 @@ func TestFlattenObject(t *testing.T) {
 
 	fmt.Println("--------------------------------------------------")
 
-	paths, _ := GetAllLeafPaths(js)
+	paths, _ := GetLeavesPathOrderly(js)
 	fmt.Println(len(paths))
 	// for i, p := range paths {
 	// 	fmt.Printf("%02d --- %v: %v\n", i, p, "tbd")

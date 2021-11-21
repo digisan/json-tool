@@ -4,12 +4,12 @@ go 1.17
 
 require (
 	github.com/clbanning/mxj v1.8.4
-	github.com/digisan/gotk v0.0.39
+	github.com/digisan/gotk v0.0.41
 	github.com/digisan/logkit v0.0.2
-	github.com/tidwall/gjson v1.10.1
+	github.com/tidwall/gjson v1.11.0
 	github.com/tidwall/pretty v1.2.0 // indirect
-	github.com/tidwall/sjson v1.2.2
-	golang.org/x/sys v0.0.0-20211023085530-d6a326fbbf70 // indirect
+	github.com/tidwall/sjson v1.2.3
+	golang.org/x/sys v0.0.0-20211117180635-dee7805ff2e1 // indirect
 )
 
 require (

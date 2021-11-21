@@ -26,6 +26,8 @@ var (
 	rxMustCompile = regexp.MustCompile
 	failOnErr     = lk.FailOnErr
 	failOnErrWhen = lk.FailOnErrWhen
+	sTrimPrefix   = strings.TrimPrefix
+	sTrimSuffix   = strings.TrimSuffix
 )
 
 var (
