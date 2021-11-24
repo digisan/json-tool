@@ -1,6 +1,7 @@
 package jsontool
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"regexp"
@@ -144,7 +145,7 @@ func GetFieldPaths(field string, mLvlSiblings map[int][]string) (paths []string)
 	return
 }
 
-// 'sibling' is valid 'field' path sibling
+// 'sibling' is valid 'field' path sibling, return m[each/path/field]"valid/path/sibling"
 func GetSiblingPath(field, sibling string, mLvlSiblings map[int][]string) (mFieldSibling map[string]string) {
 
 	mFieldSibling = make(map[string]string)
@@ -163,7 +164,7 @@ func GetSiblingPath(field, sibling string, mLvlSiblings map[int][]string) (mFiel
 	return
 }
 
-// 'siblings' are all valid path in one fixed 'field' path sibling
+// 'siblings' are all valid path in one fixed 'field' path sibling, return m[one fixed/path/field]["valid/path/sibling1", "valid/path/sibling2",...]
 func GetSiblingsPath(field string, mLvlSiblings map[int][]string, siblings ...string) (mFieldSiblings map[string][]string) {
 
 	mFieldSiblingsCand := make(map[string][]string)
@@ -320,6 +321,7 @@ func GetOutPropBlock(js string, start4prop int) (prop, block string) {
 		start4prop--
 	}
 
+FOR_PREV_OPEN_BRACKET:
 	for p := start4prop; p >= 0; p-- {
 		c := js[p]
 		if !inDQ && c == '"' && js[p-1] != '\\' {
@@ -335,7 +337,7 @@ func GetOutPropBlock(js string, start4prop int) (prop, block string) {
 				n++
 				if n == 1 {
 					start = p
-					break
+					break FOR_PREV_OPEN_BRACKET
 				}
 			case '}':
 				n--
@@ -521,4 +523,18 @@ func RemoveParent(js, prop string, mPropLocs map[string][][3]int, mPropValues ma
 		vals = append(vals, sval)
 	}
 	return strs.RangeReplace(js, locs, vals)
+}
+
+func GetSiblings(block, prop string) (siblings []string) {
+	m := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(block), &m); err == nil {
+		for k := range m {
+			if k != prop {
+				siblings = append(siblings, k)
+			}
+		}
+	} else {
+		log.Fatalln(err)
+	}
+	return
 }

@@ -411,7 +411,7 @@ func TestGetOutPropBlockByProp(t *testing.T) {
 		panic(err)
 	}
 	js := string(data)
-	ops, obs := GetOutPropBlockByProp(js, "Object")
+	ops, obs := GetOutPropBlockByProp(js, "name")
 	for i, op := range ops {
 		ob := obs[i]
 		fmt.Println(op)
@@ -429,4 +429,29 @@ func TestRemoveParent(t *testing.T) {
 	js = RemoveParent(js, "Object", mPropLocs, mPropValues)
 	fmt.Println(js)
 	os.WriteFile("./data/complex_out.json", []byte(js), os.ModePerm)
+}
+
+func TestGetSiblingProps(t *testing.T) {
+	data, err := os.ReadFile("./data/complex.json")
+	if err != nil {
+		panic(err)
+	}
+	js := string(data)
+
+	mLvlSiblings, _ := FamilyTree(js)
+
+	ops, obs := GetOutPropBlockByProp(js, "name")
+	for i := range ops {
+		ob := obs[i]
+		fmt.Println(ob)
+		siblings := GetSiblings(ob, "name")
+		fmt.Println("siblings:", siblings)
+		for _, s := range siblings {
+			for k, v := range GetSiblingsPath("name", mLvlSiblings, s) {
+				fmt.Println(k, v)
+			}	
+			fmt.Println()		
+		}
+		fmt.Println()
+	}
 }

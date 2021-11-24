@@ -20,7 +20,7 @@
                                                 {
                                                     "name": "somethingElse",
                                                     "dose": "",
-                                                    "strength": "500 mg"
+                                                    "strength": "600 mg"
                                                 }
                                             ]
                                         }
@@ -31,14 +31,14 @@
                                                 {
                                                     "name": "asprin",
                                                     "dose": "",
-                                                    "strength": "500 mg"
+                                                    "strength": "700 mg"
                                                 }
                                             ],
                                             "associatedDrug#2": [
                                                 {
                                                     "name": "somethingElse",
                                                     "dose": "",
-                                                    "strength": "500 mg"
+                                                    "strength": "800 mg"
                                                 }
                                             ]
                                         }
