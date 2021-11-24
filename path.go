@@ -310,6 +310,58 @@ func getNearPos4OA(js string, start int) (start4val, end int) {
 	return s4c, -1
 }
 
+func GetOutPropBlock(js string, start4prop int) (prop, block string) {
+
+	start, end := -1, -1
+	inDQ := false
+	n := 0
+
+	if js[start4prop] == '"' {
+		start4prop--
+	}
+
+	for p := start4prop; p >= 0; p-- {
+		c := js[p]
+		if !inDQ && c == '"' && js[p-1] != '\\' {
+			inDQ = true
+			continue
+		} else if inDQ && c == '"' && js[p-1] != '\\' {
+			inDQ = false
+			continue
+		}
+		if !inDQ {
+			switch c {
+			case '{':
+				n++
+				if n == 1 {
+					start = p
+					break
+				}
+			case '}':
+				n--
+			}
+		}
+	}
+
+	start, end = getNearPos4OA(js, start)
+	block = js[start:end]
+
+	inDQ = false
+	for p := start; p >= 0; p-- {
+		c := js[p]
+		if !inDQ && c == '"' && js[p-1] != '\\' {
+			inDQ = true
+			end = p
+		} else if inDQ && c == '"' && js[p-1] != '\\' {
+			start = p
+			break
+		}
+	}
+	prop = js[start+1 : end] // without '" "'
+
+	return
+}
+
 func GetProperties(js string) (
 	properties []string,
 	loc [][2]int,

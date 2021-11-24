@@ -393,7 +393,16 @@ func TestGetProperties(t *testing.T) {
 	fmt.Println(mPropValues["Object"][1])
 	fmt.Println(mPropValues["Object1"][0])
 
-	fmt.Println(mPropValues["problems"][0])
+	fmt.Println("----------------------")
+
+	fmt.Println(GetOutPropBlock(js, 2558))
+
+	// fmt.Println(mPropValues["problems"][0])
+
+	// blocks := blockByPropName(js, "Object")
+	// for _, block := range blocks {
+	// 	fmt.Println(block)
+	// }
 }
 
 func TestRemoveParent(t *testing.T) {
