@@ -362,6 +362,16 @@ func GetOutPropBlock(js string, start4prop int) (prop, block string) {
 	return
 }
 
+func GetOutPropBlockByProp(js, prop string) (props, blocks []string) {
+	_, _, mPropLocs, _ := GetProperties(js)
+	for _, loc := range mPropLocs[prop] {
+		prop, block := GetOutPropBlock(js, loc[0])
+		props = append(props, prop)
+		blocks = append(blocks, block)
+	}
+	return
+}
+
 func GetProperties(js string) (
 	properties []string,
 	loc [][2]int,
@@ -499,13 +509,13 @@ NEXT_PROP:
 	return
 }
 
-func RemoveParent(js, field string, mPropLocs map[string][][3]int, mPropValues map[string][]interface{}) string {
+func RemoveParent(js, prop string, mPropLocs map[string][][3]int, mPropValues map[string][]interface{}) string {
 	locs := [][2]int{}
-	for _, loc := range mPropLocs[field] {
+	for _, loc := range mPropLocs[prop] {
 		locs = append(locs, [2]int{loc[0], loc[2]})
 	}
 	vals := []string{}
-	for _, val := range mPropValues[field] {
+	for _, val := range mPropValues[prop] {
 		sval := val.(string)
 		sval = sTrim(sval, "{}")
 		vals = append(vals, sval)

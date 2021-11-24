@@ -405,6 +405,20 @@ func TestGetProperties(t *testing.T) {
 	// }
 }
 
+func TestGetOutPropBlockByProp(t *testing.T) {
+	data, err := os.ReadFile("./data/complex.json")
+	if err != nil {
+		panic(err)
+	}
+	js := string(data)
+	ops, obs := GetOutPropBlockByProp(js, "Object")
+	for i, op := range ops {
+		ob := obs[i]
+		fmt.Println(op)
+		fmt.Println(ob)
+	}
+}
+
 func TestRemoveParent(t *testing.T) {
 	data, err := os.ReadFile("./data/complex.json")
 	if err != nil {
