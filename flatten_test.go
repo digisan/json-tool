@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/digisan/gotk/slice/ts"
-	"github.com/digisan/gotk/slice/tso"
+	"github.com/digisan/gotk/generics/ts"
+	"github.com/digisan/gotk/generics/tso"
 )
 
 func TestFlattenObject(t *testing.T) {

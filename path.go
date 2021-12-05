@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/digisan/gotk"
-	"github.com/digisan/gotk/slice/ts"
+	"github.com/digisan/gotk/generics/ts"
 	strs "github.com/digisan/gotk/strings"
 	"github.com/tidwall/gjson"
 )

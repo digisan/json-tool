@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/digisan/gotk/slice/tu8"
+	"github.com/digisan/gotk/generics/tu8"
 )
 
 // IsValid :

@@ -5,7 +5,7 @@ import (
 	"math"
 	"regexp"
 
-	"github.com/digisan/gotk/slice/ts"
+	"github.com/digisan/gotk/generics/ts"
 	"github.com/tidwall/sjson"
 )
 

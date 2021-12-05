@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/digisan/gotk/slice/ts"
+	"github.com/digisan/gotk/generics/ts"
 )
 
 func TestNewSibling(t *testing.T) {
