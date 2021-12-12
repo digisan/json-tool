@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/digisan/gotk/generics/ts"
-	"github.com/digisan/gotk/generics/tso"
+	"github.com/digisan/go-generics/so"
+	"github.com/digisan/go-generics/str"
 )
 
 func TestFlattenObject(t *testing.T) {
@@ -24,7 +24,7 @@ func TestFlattenObject(t *testing.T) {
 	// 	fmt.Printf("%02d --- %v: %v\n", I, k, v)
 	// 	I++
 	// }
-	ks, _ := tso.Map2KVs(m, nil, nil)
+	ks, _ := so.Map2KVs(m, nil, nil)
 	fmt.Println(len(ks))
 
 	fmt.Println("--------------------------------------------------")
@@ -37,5 +37,5 @@ func TestFlattenObject(t *testing.T) {
 
 	fmt.Println("--------------------------------------------------")
 
-	fmt.Println(ts.Equal(paths, ks))
+	fmt.Println(str.Equal(paths, ks))
 }

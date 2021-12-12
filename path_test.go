@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/digisan/gotk/generics/ts"
+	"github.com/digisan/go-generics/str"
 )
 
 func TestNewSibling(t *testing.T) {
@@ -80,11 +80,11 @@ func TestGetFieldPaths(t *testing.T) {
 
 	fmt.Println("--------------------------------")
 
-	fmt.Println(ts.Equal(fpaths1, fpaths2))
+	fmt.Println(str.Equal(fpaths1, fpaths2))
 
-	fmt.Println(ts.Minus(fpaths1, fpaths2))
+	fmt.Println(str.Minus(fpaths1, fpaths2))
 
-	fmt.Println(ts.Minus(fpaths2, fpaths1))
+	fmt.Println(str.Minus(fpaths2, fpaths1))
 
 }
 

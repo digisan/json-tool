@@ -5,7 +5,7 @@ import (
 	"math"
 	"regexp"
 
-	"github.com/digisan/gotk/generics/ts"
+	"github.com/digisan/go-generics/str"
 	"github.com/tidwall/sjson"
 )
 
@@ -207,7 +207,7 @@ func Composite2(m map[string]interface{}, fm func(path string, value interface{}
 func CompositeExcl(m map[string]interface{}, exclPaths ...string) string {
 	jsonbytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
 	for path, value := range m {
-		if exclPaths != nil && ts.In(path, exclPaths...) {
+		if exclPaths != nil && str.In(path, exclPaths...) {
 			continue
 		}
 		jsonbytes, _ = sjson.SetBytes(jsonbytes, path, value)
@@ -218,7 +218,7 @@ func CompositeExcl(m map[string]interface{}, exclPaths ...string) string {
 func CompositeIncl(m map[string]interface{}, inclPaths ...string) string {
 	jsonbytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
 	for path, value := range m {
-		if inclPaths != nil && ts.In(path, inclPaths...) {
+		if inclPaths != nil && str.In(path, inclPaths...) {
 			jsonbytes, _ = sjson.SetBytes(jsonbytes, path, value)
 		}
 	}

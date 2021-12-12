@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/digisan/gotk"
-	"github.com/digisan/gotk/generics/ts"
+	"github.com/digisan/go-generics/str"
 	strs "github.com/digisan/gotk/strings"
 	"github.com/tidwall/gjson"
 )
@@ -107,7 +107,7 @@ func FamilyTree(js string) (mLvlSiblings map[int][]string, mFamilyTree map[strin
 
 	for I, lvl := range lvls {
 		if len(lvl) > 0 {
-			lvl = ts.MkSet(lvl...)
+			lvl = str.MkSet(lvl...)
 			mLvlSiblings[I] = lvl
 		}
 	}
@@ -156,7 +156,7 @@ func GetSiblingPath(field, sibling string, mLvlSiblings map[int][]string) (mFiel
 	const MAX_LEVEL = 1024
 	for l := 0; l < MAX_LEVEL; l++ {
 		for _, sib := range mLvlSiblings[l] {
-			if ts.In(sib, sPathsCandidates...) {
+			if str.In(sib, sPathsCandidates...) {
 				mFieldSibling[NewSibling(sib, field)] = sib
 			}
 		}
@@ -258,7 +258,7 @@ func iteratePath(js, ppath string, first, array bool, paths *[]string, values *[
 
 func GetLeafPathsOrderly(field string, allPaths []string) []string {
 	rField := regexp.MustCompile(fSf(`\.%s(\.\d+)*$`, field))
-	return ts.FM(allPaths, func(i int, e string) bool {
+	return str.FM(allPaths, func(i int, e string) bool {
 		return rField.MatchString(e) || field == e
 	}, nil)
 }
@@ -483,7 +483,7 @@ NEXT_PROP:
 		for i, val := range vals {
 			switch sv := val.(type) {
 			case string:
-				if ts.In(sv, "#OBJECT", "#ARRAY") {
+				if str.In(sv, "#OBJECT", "#ARRAY") {
 
 					start := mPropLocs[prop][i][0]
 					s4c, end := getNearPos4OA(js, start)

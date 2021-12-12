@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/digisan/gotk/generics/tu8"
+	"github.com/digisan/go-generics/u8"
 )
 
 // IsValid :
@@ -64,7 +64,7 @@ func Minimize(str string, check bool) string {
 			quotes = !quotes
 			sb.WriteByte(c)
 		case !quotes:
-			if tu8.NotIn(c, ' ', '\t', '\n', '\r') {
+			if u8.NotIn(c, ' ', '\t', '\n', '\r') {
 				sb.WriteByte(c)
 			}
 		case quotes:
