@@ -9,7 +9,7 @@ import (
 
 	"github.com/digisan/gotk"
 	"github.com/digisan/go-generics/str"
-	strs "github.com/digisan/gotk/strings"
+	"github.com/digisan/gotk/strs"
 	"github.com/tidwall/gjson"
 )
 
