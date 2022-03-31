@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"strings"
 
-	"github.com/digisan/go-generics/u8"
+	. "github.com/digisan/go-generics/v2"
 )
 
 // IsValid :
 func IsValid(bytes []byte) bool {
-	var m interface{}
+	var m any
 	return json.Unmarshal(bytes, &m) == nil
 }
 
@@ -19,7 +19,7 @@ func IsValidStr(str string) bool {
 
 // Fmt :
 func Fmt(bytes []byte, indent string) []byte {
-	var m interface{}
+	var m any
 	err := json.Unmarshal(bytes, &m)
 	failOnErr("%v", err)
 	bytes, err = json.MarshalIndent(&m, "", indent)
@@ -33,7 +33,7 @@ func FmtStr(str, indent string) string {
 
 // TryFmt :
 func TryFmt(bytes []byte, indent string) []byte {
-	var m interface{}
+	var m any
 	if err := json.Unmarshal(bytes, &m); err != nil {
 		return bytes
 	}
@@ -64,7 +64,7 @@ func Minimize(str string, check bool) string {
 			quotes = !quotes
 			sb.WriteByte(c)
 		case !quotes:
-			if u8.NotIn(c, ' ', '\t', '\n', '\r') {
+			if NotIn(c, ' ', '\t', '\n', '\r') {
 				sb.WriteByte(c)
 			}
 		case quotes:
@@ -84,11 +84,11 @@ func TryMinimize(str string) string {
 }
 
 // MarshalRemove :
-func MarshalRemove(v interface{}, mFieldOldNew map[string]string, rmFields ...string) (bytes []byte, err error) {
+func MarshalRemove(v any, mFieldOldNew map[string]string, rmFields ...string) (bytes []byte, err error) {
 	if bytes, err = json.Marshal(v); err != nil {
 		return nil, err
 	}
-	m := make(map[string]interface{})
+	m := make(map[string]any)
 	json.Unmarshal(bytes, &m)
 	for _, f := range rmFields {
 		delete(m, f)

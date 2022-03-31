@@ -9,14 +9,14 @@ import (
 
 func TestTransform(t *testing.T) {
 
-	RegisterRule(`.*`, func(path string, value interface{}) (ok bool, ps []string, vs []interface{}) {
+	RegisterRule(`.*`, func(path string, value any) (ok bool, ps []string, vs []any) {
 		ok = GetStrVal(value) == "H"
 		ps = append(ps, path)
 		vs = append(vs, "HH")
 		return
 	})
 
-	RegisterRule(`^array\.`, func(path string, value interface{}) (ok bool, ps []string, vs []interface{}) {
+	RegisterRule(`^array\.`, func(path string, value any) (ok bool, ps []string, vs []any) {
 		ok = true
 		ps = append(ps, "")
 		vs = append(vs, nil)
@@ -42,7 +42,7 @@ func TestComposite(t *testing.T) {
 	os.WriteFile("./data/FlattenTest_Composite_1.json", []byte(str), os.ModePerm)
 
 	// str = Composite(m,
-	// 	func(path string, value interface{}) (string, interface{}, bool) {
+	// 	func(path string, value any) (string, any, bool) {
 	// 		if strings.Contains(path, "object") {
 	// 			if value == "b" {
 	// 				return NewSibling(path, "ABC"), value.(string) + "ABC", false
@@ -53,19 +53,19 @@ func TestComposite(t *testing.T) {
 	// 	})
 	// fmt.Println(str)
 
-	str = Composite2(m, func(path string, value interface{}) (p []string, v []interface{}) {
+	str = Composite2(m, func(path string, value any) (p []string, v []any) {
 		if strings.Contains(path, "object") {
 			if value == "b" || value == "F" {
 				return []string{
 						NewChild(NewSibling(path, "DEF"), "abc"),
 						NewChild(NewSibling(path, "DEF"), "def"),
 					},
-					[]interface{}{
+					[]any{
 						value.(string) + "ABC",
 						value.(string) + "DEF",
 					}
 			}
-			return []string{path}, []interface{}{value}
+			return []string{path}, []any{value}
 		}
 		return nil, nil
 	})

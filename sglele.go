@@ -9,7 +9,7 @@ func Root(str string) string {
 
 // MkSglEleBlk :
 // LIKE { "only-one-element": { ... } }
-func MkSglEleBlk(name string, value interface{}, fmt bool) string {
+func MkSglEleBlk(name string, value any, fmt bool) string {
 	// string type value to be added "quotes"
 	switch vt := value.(type) {
 	case string:

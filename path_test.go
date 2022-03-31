@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/digisan/go-generics/str"
+	. "github.com/digisan/go-generics/v2"
 )
 
 func TestNewSibling(t *testing.T) {
@@ -80,11 +80,11 @@ func TestGetFieldPaths(t *testing.T) {
 
 	fmt.Println("--------------------------------")
 
-	fmt.Println(str.Equal(fpaths1, fpaths2))
+	fmt.Println(Equals(fpaths1, fpaths2))
 
-	fmt.Println(str.Minus(fpaths1, fpaths2))
+	fmt.Println(Minus(fpaths1, fpaths2))
 
-	fmt.Println(str.Minus(fpaths2, fpaths1))
+	fmt.Println(Minus(fpaths2, fpaths1))
 
 }
 
@@ -449,8 +449,8 @@ func TestGetSiblingProps(t *testing.T) {
 		for _, s := range siblings {
 			for k, v := range GetSiblingsPath("name", mLvlSiblings, s) {
 				fmt.Println(k, v)
-			}	
-			fmt.Println()		
+			}
+			fmt.Println()
 		}
 		fmt.Println()
 	}

@@ -51,9 +51,9 @@ func TestTryFmt(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := TryFmtStr(tt.args.str, "  ")
-			fmt.Println(got)
+			fmt.Println("try:", got)
 			got = FmtStr(tt.args.str, "  ")
-			fmt.Println(got)
+			fmt.Println("fmt:", got)
 		})
 	}
 }
@@ -86,11 +86,11 @@ func TestMinimize(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := TryMinimize(tt.args.str)
-			fmt.Println(got)
+			fmt.Println("try:", got)
 			got = Minimize(tt.args.str, false)
-			fmt.Println(got)
+			fmt.Println("mini", got)
 			got = Minimize(tt.args.str, true)
-			fmt.Println(got)
+			fmt.Println("check:", got)
 		})
 	}
 }
@@ -122,7 +122,7 @@ func TestMarshalRemove(t *testing.T) {
 	}
 
 	type args struct {
-		v            interface{}
+		v            any
 		mFieldOldNew map[string]string
 		fields       []string
 	}

@@ -5,19 +5,19 @@ import (
 	"fmt"
 )
 
-func dumpMap(pk string, jv interface{}, mflat *map[string]interface{}) {
+func dumpMap(pk string, jv any, mflat *map[string]any) {
 
 	switch m := jv.(type) {
 	case float64, string, bool, nil:
 		(*mflat)[pk] = m
 
-	case []interface{}:
+	case []any:
 		for i, a := range m {
 			idx := fmt.Sprintf("%s.%d", pk, i)
 			dumpMap(idx, a, mflat)
 		}
 
-	case map[string]interface{}:
+	case map[string]any:
 		{
 			for k, v := range m {
 				if pk != "" {
@@ -25,8 +25,8 @@ func dumpMap(pk string, jv interface{}, mflat *map[string]interface{}) {
 				}
 
 				switch mv := v.(type) {
-				case []interface{}:
-					for i, a := range v.([]interface{}) {
+				case []any:
+					for i, a := range v.([]any) {
 						idx := fmt.Sprintf("%s.%d", k, i)
 						dumpMap(idx, a, mflat)
 					}
@@ -38,24 +38,24 @@ func dumpMap(pk string, jv interface{}, mflat *map[string]interface{}) {
 	}
 }
 
-func FlattenStr(jsonObj string) (map[string]interface{}, error) {
-	jsonMap := make(map[string]interface{})
+func FlattenStr(jsonObj string) (map[string]any, error) {
+	jsonMap := make(map[string]any)
 	err := json.Unmarshal([]byte(jsonObj), &jsonMap)
 	if err != nil {
 		return nil, err
 	}
-	flatMap := make(map[string]interface{})
+	flatMap := make(map[string]any)
 	dumpMap("", jsonMap, &flatMap)
 	return flatMap, nil
 }
 
-func Flatten(jsonObj []byte) (map[string]interface{}, error) {
-	jsonMap := make(map[string]interface{})
+func Flatten(jsonObj []byte) (map[string]any, error) {
+	jsonMap := make(map[string]any)
 	err := json.Unmarshal(jsonObj, &jsonMap)
 	if err != nil {
 		return nil, err
 	}
-	flatMap := make(map[string]interface{})
+	flatMap := make(map[string]any)
 	dumpMap("", jsonMap, &flatMap)
 	return flatMap, nil
 }

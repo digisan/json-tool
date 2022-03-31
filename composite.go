@@ -5,11 +5,11 @@ import (
 	"math"
 	"regexp"
 
-	"github.com/digisan/go-generics/str"
+	. "github.com/digisan/go-generics/v2"
 	"github.com/tidwall/sjson"
 )
 
-func GetStrVal(value interface{}) string {
+func GetStrVal(value any) string {
 	val := ""
 	switch v := value.(type) {
 	case string:
@@ -18,7 +18,7 @@ func GetStrVal(value interface{}) string {
 	return val
 }
 
-func GetIntVal(value interface{}) int {
+func GetIntVal(value any) int {
 	val := math.MinInt + 1
 	switch v := value.(type) {
 	case int:
@@ -28,23 +28,23 @@ func GetIntVal(value interface{}) int {
 }
 
 var (
-	// mRule  = make(map[string]func(path string, value interface{}) (ok bool, ps []string, vs []interface{}))
+	// mRule  = make(map[string]func(path string, value any) (ok bool, ps []string, vs []any))
 	// mFocus = make(map[string]*regexp.Regexp)
 	focus = []*regexp.Regexp{}
-	rules = []func(path string, value interface{}) (ok bool, ps []string, vs []interface{}){}
+	rules = []func(path string, value any) (ok bool, ps []string, vs []any){}
 )
 
-// func RegisterRule(name string, regexpStr string, f func(path string, value interface{}) (ok bool, ps []string, vs []interface{})) {
+// func RegisterRule(name string, regexpStr string, f func(path string, value any) (ok bool, ps []string, vs []any)) {
 // 	mRule[name] = f
 // 	mFocus[name] = regexp.MustCompile(regexpStr)
 // }
 
-func RegisterRule(regexpStr string, f func(path string, value interface{}) (ok bool, ps []string, vs []interface{})) {
+func RegisterRule(regexpStr string, f func(path string, value any) (ok bool, ps []string, vs []any)) {
 	focus = append(focus, regexp.MustCompile(regexpStr))
 	rules = append(rules, f)
 }
 
-func TransformUnderFirstRule(mData map[string]interface{}, data []byte) string {
+func TransformUnderFirstRule(mData map[string]any, data []byte) string {
 
 	var err error
 	if mData == nil {
@@ -114,7 +114,7 @@ NEXT_PATH:
 // 	return js
 // }
 
-func TransformUnderAllRules(mData map[string]interface{}, data []byte) string {
+func TransformUnderAllRules(mData map[string]any, data []byte) string {
 
 	var err error
 	if mData == nil {
@@ -158,7 +158,7 @@ func TransformUnderAllRules(mData map[string]interface{}, data []byte) string {
 	return js
 }
 
-// func Composite(m map[string]interface{}, filter func(path string) bool) string {
+// func Composite(m map[string]any, filter func(path string) bool) string {
 // 	jsonbytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
 // 	for path, value := range m {
 // 		if (filter == nil) || (filter != nil && filter(path)) {
@@ -168,7 +168,7 @@ func TransformUnderAllRules(mData map[string]interface{}, data []byte) string {
 // 	return string(jsonbytes)
 // }
 
-func Composite(m map[string]interface{}, fm func(path string, value interface{}) (p string, v interface{}, raw bool)) string {
+func Composite(m map[string]any, fm func(path string, value any) (p string, v any, raw bool)) string {
 	js, _ := sjson.Set("", "", "") // empty json doc to reinflate with tuples
 	for path, value := range m {
 		if fm == nil {
@@ -184,7 +184,7 @@ func Composite(m map[string]interface{}, fm func(path string, value interface{})
 	return js
 }
 
-func Composite2(m map[string]interface{}, fm func(path string, value interface{}) (p []string, v []interface{})) string {
+func Composite2(m map[string]any, fm func(path string, value any) (p []string, v []any)) string {
 	js, _ := sjson.Set("", "", "") // empty json doc to reinflate with tuples
 	for path, value := range m {
 		if fm == nil {
@@ -204,10 +204,10 @@ func Composite2(m map[string]interface{}, fm func(path string, value interface{}
 	return js
 }
 
-func CompositeExcl(m map[string]interface{}, exclPaths ...string) string {
+func CompositeExcl(m map[string]any, exclPaths ...string) string {
 	jsonbytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
 	for path, value := range m {
-		if exclPaths != nil && str.In(path, exclPaths...) {
+		if exclPaths != nil && In(path, exclPaths...) {
 			continue
 		}
 		jsonbytes, _ = sjson.SetBytes(jsonbytes, path, value)
@@ -215,10 +215,10 @@ func CompositeExcl(m map[string]interface{}, exclPaths ...string) string {
 	return string(jsonbytes)
 }
 
-func CompositeIncl(m map[string]interface{}, inclPaths ...string) string {
+func CompositeIncl(m map[string]any, inclPaths ...string) string {
 	jsonbytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
 	for path, value := range m {
-		if inclPaths != nil && str.In(path, inclPaths...) {
+		if inclPaths != nil && In(path, inclPaths...) {
 			jsonbytes, _ = sjson.SetBytes(jsonbytes, path, value)
 		}
 	}

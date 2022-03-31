@@ -7,8 +7,9 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/digisan/gotk"
 	"github.com/digisan/go-generics/str"
+	. "github.com/digisan/go-generics/v2"
+	"github.com/digisan/gotk"
 	"github.com/digisan/gotk/strs"
 	"github.com/tidwall/gjson"
 )
@@ -107,7 +108,7 @@ func FamilyTree(js string) (mLvlSiblings map[int][]string, mFamilyTree map[strin
 
 	for I, lvl := range lvls {
 		if len(lvl) > 0 {
-			lvl = str.MkSet(lvl...)
+			lvl = Settify(lvl...)
 			mLvlSiblings[I] = lvl
 		}
 	}
@@ -156,7 +157,7 @@ func GetSiblingPath(field, sibling string, mLvlSiblings map[int][]string) (mFiel
 	const MAX_LEVEL = 1024
 	for l := 0; l < MAX_LEVEL; l++ {
 		for _, sib := range mLvlSiblings[l] {
-			if str.In(sib, sPathsCandidates...) {
+			if In(sib, sPathsCandidates...) {
 				mFieldSibling[NewSibling(sib, field)] = sib
 			}
 		}
@@ -258,9 +259,10 @@ func iteratePath(js, ppath string, first, array bool, paths *[]string, values *[
 
 func GetLeafPathsOrderly(field string, allPaths []string) []string {
 	rField := regexp.MustCompile(fSf(`\.%s(\.\d+)*$`, field))
-	return str.FM(allPaths, func(i int, e string) bool {
+	Filter(&allPaths, func(i int, e string) bool {
 		return rField.MatchString(e) || field == e
-	}, nil)
+	})
+	return allPaths
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -378,7 +380,7 @@ func GetProperties(js string) (
 	properties []string,
 	loc [][2]int,
 	mPropLocs map[string][][3]int, // start, start4value, end
-	mPropValues map[string][]interface{},
+	mPropValues map[string][]any,
 ) {
 
 	var (
@@ -418,7 +420,7 @@ func GetProperties(js string) (
 		}
 	}
 
-	mPropValues = make(map[string][]interface{})
+	mPropValues = make(map[string][]any)
 NEXT_PROP:
 	for prop, locs := range mPropLocs {
 		for _, loc := range locs {
@@ -511,7 +513,7 @@ NEXT_PROP:
 	return
 }
 
-func RemoveParent(js, prop string, mPropLocs map[string][][3]int, mPropValues map[string][]interface{}) string {
+func RemoveParent(js, prop string, mPropLocs map[string][][3]int, mPropValues map[string][]any) string {
 	locs := [][2]int{}
 	for _, loc := range mPropLocs[prop] {
 		locs = append(locs, [2]int{loc[0], loc[2]})
@@ -526,7 +528,7 @@ func RemoveParent(js, prop string, mPropLocs map[string][][3]int, mPropValues ma
 }
 
 func GetSiblings(block, prop string) (siblings []string) {
-	m := make(map[string]interface{})
+	m := make(map[string]any)
 	if err := json.Unmarshal([]byte(block), &m); err == nil {
 		for k := range m {
 			if k != prop {

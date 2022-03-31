@@ -7,9 +7,9 @@ import (
 )
 
 // Cvt2XML :
-func Cvt2XML(str string, mav map[string]interface{}) string {
+func Cvt2XML(str string, mav map[string]any) string {
 
-	var m interface{}
+	var m any
 	json.Unmarshal([]byte(str), &m)
 	bytes, err := mxj.AnyXmlIndent(m, "", "    ", "")
 	failOnErr("%v", err)
