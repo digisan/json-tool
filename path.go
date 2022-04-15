@@ -9,7 +9,7 @@ import (
 
 	"github.com/digisan/go-generics/str"
 	. "github.com/digisan/go-generics/v2"
-	"github.com/digisan/gotk"
+	tc "github.com/digisan/gotk/type-check"
 	"github.com/digisan/gotk/strs"
 	"github.com/tidwall/gjson"
 )
@@ -24,7 +24,7 @@ func OPath2TPath(op, sep string) (tp string, err error) {
 	iNumGrp := []int{}
 	ss := []string{}
 	for i, s := range sSplit(op, sep) {
-		if !gotk.IsNumeric(s) {
+		if !tc.IsNumeric(s) {
 			ss = append(ss, s)
 		} else {
 			iNumGrp = append(iNumGrp, i)
@@ -45,7 +45,7 @@ func OPath2TPath(op, sep string) (tp string, err error) {
 func ParentPath(path string) string {
 	ss := sSplit(path, ".")
 	if len(ss) >= 2 {
-		if gotk.IsNumeric(ss[len(ss)-2]) {
+		if tc.IsNumeric(ss[len(ss)-2]) {
 			return sJoin(ss[:len(ss)-2], ".")
 		}
 	}
