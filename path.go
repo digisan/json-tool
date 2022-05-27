@@ -9,8 +9,8 @@ import (
 
 	"github.com/digisan/go-generics/str"
 	. "github.com/digisan/go-generics/v2"
-	tc "github.com/digisan/gotk/type-check"
 	"github.com/digisan/gotk/strs"
+	tc "github.com/digisan/gotk/type-check"
 	"github.com/tidwall/gjson"
 )
 
@@ -258,11 +258,11 @@ func iteratePath(js, ppath string, first, array bool, paths *[]string, values *[
 }
 
 func GetLeafPathsOrderly(field string, allPaths []string) []string {
-	rField := regexp.MustCompile(fSf(`\.%s(\.\d+)*$`, field))
-	Filter(&allPaths, func(i int, e string) bool {
-		return rField.MatchString(e) || field == e
-	})
-	return allPaths
+	r := regexp.MustCompile(fSf(`\.%s(\.\d+)*$`, field))
+	return FilterMap4SglTyp(allPaths,
+		func(i int, e string) bool { return field == e || r.MatchString(e) },
+		nil,
+	)
 }
 
 ////////////////////////////////////////////////////////////////////////////

@@ -70,7 +70,7 @@ func TestGetFieldPaths(t *testing.T) {
 		fmt.Println(p)
 	}
 
-	fmt.Println("--------------------------------")
+	fmt.Println("--------------------------------", lookfor, len(paths))
 
 	fpaths2 := GetLeafPathsOrderly(lookfor, paths)
 	fmt.Println(len(fpaths2))
@@ -78,7 +78,7 @@ func TestGetFieldPaths(t *testing.T) {
 		fmt.Println(p)
 	}
 
-	fmt.Println("--------------------------------")
+	fmt.Println("--------------------------------", lookfor)
 
 	fmt.Println(Equals(fpaths1, fpaths2))
 
