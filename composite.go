@@ -1,13 +1,23 @@
 package jsontool
 
 import (
+	"errors"
 	"log"
 	"math"
 	"regexp"
 
 	. "github.com/digisan/go-generics/v2"
+	lk "github.com/digisan/logkit"
 	"github.com/tidwall/sjson"
 )
+
+func GetVal[T any](value any) T {
+	if ret, ok := value.(T); ok {
+		return ret
+	}
+	lk.FailOnErr("%v", errors.New("value type error"))
+	return *new(T)
+}
 
 func GetStrVal(value any) string {
 	val := ""
@@ -39,8 +49,8 @@ var (
 // 	mFocus[name] = regexp.MustCompile(regexpStr)
 // }
 
-func RegisterRule(regexpStr string, f func(path string, value any) (ok bool, ps []string, vs []any)) {
-	focus = append(focus, regexp.MustCompile(regexpStr))
+func RegisterRule(rePathStr string, f func(path string, value any) (ok bool, ps []string, vs []any)) {
+	focus = append(focus, regexp.MustCompile(rePathStr))
 	rules = append(rules, f)
 }
 

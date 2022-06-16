@@ -7,10 +7,16 @@ import (
 	"testing"
 )
 
+func TestGetVal(t *testing.T) {
+	i := 100.0
+	r := GetVal[float64](i)
+	fmt.Println(r)
+}
+
 func TestTransform(t *testing.T) {
 
 	RegisterRule(`.*`, func(path string, value any) (ok bool, ps []string, vs []any) {
-		ok = GetStrVal(value) == "H"
+		ok = GetVal[string](value) == "H"
 		ps = append(ps, path)
 		vs = append(vs, "HH")
 		return

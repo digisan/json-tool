@@ -7,7 +7,6 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/digisan/go-generics/str"
 	. "github.com/digisan/go-generics/v2"
 	"github.com/digisan/gotk/strs"
 	tc "github.com/digisan/gotk/type-check"
@@ -485,7 +484,7 @@ NEXT_PROP:
 		for i, val := range vals {
 			switch sv := val.(type) {
 			case string:
-				if str.In(sv, "#OBJECT", "#ARRAY") {
+				if In(sv, "#OBJECT", "#ARRAY") {
 
 					start := mPropLocs[prop][i][0]
 					s4c, end := getNearPos4OA(js, start)

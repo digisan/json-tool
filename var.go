@@ -12,7 +12,6 @@ var (
 	fPln          = fmt.Println
 	fSf           = fmt.Sprintf
 	fEf           = fmt.Errorf
-	sContains     = strings.Contains
 	sSplit        = strings.Split
 	sJoin         = strings.Join
 	sTrim         = strings.Trim
