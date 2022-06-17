@@ -6,6 +6,7 @@ import (
 	"log"
 	"regexp"
 	"strconv"
+	"strings"
 
 	. "github.com/digisan/go-generics/v2"
 	"github.com/digisan/gotk/strs"
@@ -262,6 +263,34 @@ func GetLeafPathsOrderly(field string, allPaths []string) []string {
 		func(i int, e string) bool { return field == e || r.MatchString(e) },
 		nil,
 	)
+}
+
+// [paths] from 'GetLeavesPathOrderly'
+func SimilarPaths(paths []string, path string) []string {
+	reSimilarPath := func(path string) *regexp.Regexp {
+		sb := strings.Builder{}
+		for _, seg := range strings.Split(path, ".") {
+			if tc.IsNumeric(seg) {
+				sb.WriteString("\\d+")
+			} else {
+				sb.WriteString(seg)
+			}
+			sb.WriteString("\\.")
+		}
+		reStr := "^" + strings.TrimSuffix(sb.String(), `\.`)
+		return regexp.MustCompile(reStr)
+	}(path)
+
+	nNeed := strings.Count(path, ".") + 1
+	paths = FilterMap4SglTyp(paths,
+		func(i int, e string) bool {
+			return reSimilarPath.MatchString(e)
+		},
+		func(i int, e string) string {
+			return strings.Join(strings.Split(e, ".")[:nNeed], ".")
+		},
+	)
+	return Settify(paths...)
 }
 
 ////////////////////////////////////////////////////////////////////////////

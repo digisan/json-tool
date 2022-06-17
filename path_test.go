@@ -455,3 +455,15 @@ func TestGetSiblingProps(t *testing.T) {
 		fmt.Println()
 	}
 }
+
+func TestSimilarPaths(t *testing.T) {
+	fpath := "./data/dupele"
+	data, err := os.ReadFile(fpath + ".json")
+	if err != nil {
+		panic(err)
+	}
+	paths, _ := GetLeavesPathOrderly(string(data))
+	for _, path := range SimilarPaths(paths, "root.0.Age.0.name") {
+		fmt.Println(path)
+	}
+}

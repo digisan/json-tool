@@ -1,9 +1,11 @@
 package jsontool
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
+	. "github.com/digisan/go-generics/v2"
 	"github.com/digisan/gotk/strs"
 	lk "github.com/digisan/logkit"
 	"github.com/tidwall/gjson"
@@ -158,3 +160,41 @@ func FixOneDupKey(js, prefix string) string {
 	}
 	return js
 }
+
+func RmDupEleOnce(js, path string) string {
+	if r := gjson.Get(js, path); r.IsArray() {
+
+		indices, array := []int{}, []string{}
+		temp := []string{}
+
+		for i, ele := range r.Array() {
+			switch {
+			case ele.IsObject():
+				m := make(map[string]any)
+				lk.FailOnErr("%v", json.Unmarshal([]byte(ele.Raw), &m))
+				sm := fmt.Sprint(m)
+				if NotIn(sm, temp...) {
+					indices = append(indices, i)
+					temp = append(temp, sm)
+				}
+			default:
+				if NotIn(ele.Raw, temp...) {
+					indices = append(indices, i)
+					temp = append(temp, ele.Raw)
+				}
+			}
+		}
+
+		for i, ele := range r.Array() {
+			if In(i, indices...) {
+				array = append(array, ele.Raw)
+			}
+		}
+
+		js, err := sjson.SetRaw(js, path, "["+strings.Join(array, ",")+"]")
+		lk.FailOnErr("%v", err)
+		return js
+	}
+	return js
+}
+

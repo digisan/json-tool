@@ -23,7 +23,7 @@ AGAIN:
 }
 
 func TestFixOneDupKey(t *testing.T) {
-	fpath := "./data/dup1"
+	fpath := "./data/dupkey"
 	data, err := os.ReadFile(fpath + ".json")
 	if err != nil {
 		panic(err)
@@ -31,5 +31,15 @@ func TestFixOneDupKey(t *testing.T) {
 	n := 6
 	prefix := "\n" + strings.Repeat(" ", n) + "\"Age\":"
 	fixed := FixOneDupKey(string(data), prefix)
+	os.WriteFile(fpath+"1.json", []byte(fixed), os.ModePerm)
+}
+
+func TestRmDupEleOnce(t *testing.T) {
+	fpath := "./data/dupele"
+	data, err := os.ReadFile(fpath + ".json")
+	if err != nil {
+		panic(err)
+	}
+	fixed := RmDupEleOnce(string(data), "root.0.Age")
 	os.WriteFile(fpath+"1.json", []byte(fixed), os.ModePerm)
 }
