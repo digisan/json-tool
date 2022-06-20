@@ -265,8 +265,7 @@ func TestGetAllLeafPaths(t *testing.T) {
 
 func TestOPath2TPath(t *testing.T) {
 	type args struct {
-		op  string
-		sep string
+		op string
 	}
 	tests := []struct {
 		name    string
@@ -278,8 +277,7 @@ func TestOPath2TPath(t *testing.T) {
 		{
 			name: "",
 			args: args{
-				op:  "a",
-				sep: ".",
+				op: "a",
 			},
 			wantTp:  "a",
 			wantErr: false,
@@ -287,8 +285,7 @@ func TestOPath2TPath(t *testing.T) {
 		{
 			name: "",
 			args: args{
-				op:  "a.b.1.c.3.d",
-				sep: ".",
+				op: "a.b.1.c.3.d",
 			},
 			wantTp:  "a.b.c.d",
 			wantErr: false,
@@ -296,8 +293,7 @@ func TestOPath2TPath(t *testing.T) {
 		{
 			name: "",
 			args: args{
-				op:  "a.b.1.c.3.0.d",
-				sep: ".",
+				op: "a.b.1.c.3.0.d",
 			},
 			wantTp:  "a.b.c.d",
 			wantErr: true,
@@ -305,7 +301,7 @@ func TestOPath2TPath(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			gotTp, err := OPath2TPath(tt.args.op, tt.args.sep)
+			gotTp, err := OPath2TPath(tt.args.op)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("OPath2TPath() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -320,7 +316,6 @@ func TestOPath2TPath(t *testing.T) {
 func TestLastSegMod(t *testing.T) {
 	type args struct {
 		path string
-		sep  string
 		f    func(last string) string
 	}
 	tests := []struct {
@@ -333,7 +328,6 @@ func TestLastSegMod(t *testing.T) {
 			name: "",
 			args: args{
 				path: "a.b.c.d",
-				sep:  ".",
 				f: func(last string) string {
 					return "@" + last
 				},
@@ -344,7 +338,6 @@ func TestLastSegMod(t *testing.T) {
 			name: "",
 			args: args{
 				path: "a",
-				sep:  ".",
 				f: func(last string) string {
 					return "@" + last
 				},
@@ -355,7 +348,6 @@ func TestLastSegMod(t *testing.T) {
 			name: "",
 			args: args{
 				path: "",
-				sep:  ".",
 				f: func(last string) string {
 					return "@" + last
 				},
@@ -365,7 +357,7 @@ func TestLastSegMod(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := LastSegMod(tt.args.path, tt.args.sep, tt.args.f); got != tt.want {
+			if got := LastSegMod(tt.args.path, tt.args.f); got != tt.want {
 				t.Errorf("LastSegMod() = %v, want %v", got, tt.want)
 			}
 		})

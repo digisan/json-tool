@@ -14,16 +14,18 @@ import (
 	"github.com/tidwall/gjson"
 )
 
-func LastSegMod(path, sep string, f func(last string) string) string {
-	ss := sSplit(path, sep)
+// "a.b.c" => "a.b.d"
+func LastSegMod(path string, f func(last string) string) string {
+	ss := sSplit(path, ".")
 	ss[len(ss)-1] = f(ss[len(ss)-1])
-	return sJoin(ss, sep)
+	return sJoin(ss, ".")
 }
 
-func OPath2TPath(op, sep string) (tp string, err error) {
+// "a.b.1.c.3.d" => "a.b.c.d"
+func OPath2TPath(op string) (tp string, err error) {
 	iNumGrp := []int{}
 	ss := []string{}
-	for i, s := range sSplit(op, sep) {
+	for i, s := range sSplit(op, ".") {
 		if !tc.IsNumeric(s) {
 			ss = append(ss, s)
 		} else {
@@ -32,13 +34,12 @@ func OPath2TPath(op, sep string) (tp string, err error) {
 	}
 	if len(iNumGrp) > 1 {
 		for i := 1; i < len(iNumGrp); i++ {
-			prev, curr := iNumGrp[i-1], iNumGrp[i]
-			if curr-prev == 1 {
+			if prev, curr := iNumGrp[i-1], iNumGrp[i]; curr-prev == 1 {
 				err = fmt.Errorf("array as another array's element cannot be converted to TypePath")
 			}
 		}
 	}
-	return sJoin(ss, sep), err
+	return sJoin(ss, "."), err
 }
 
 // for json path sep by dot(.)
@@ -53,8 +54,7 @@ func ParentPath(path string) string {
 }
 
 func FieldName(path string) string {
-	ss := sSplit(path, ".")
-	return ss[len(ss)-1]
+	return strs.SplitPartFromLast(path, ".", 1)
 }
 
 func NewChild(fieldPath, childName string) string {

@@ -198,3 +198,13 @@ func RmDupEleOnce(js, path string) string {
 	return js
 }
 
+// 'allPaths' from 'GetLeavesPathOrderly'
+func RmDupEle(js, samplePath string, allPaths []string) string {
+	if allPaths == nil {
+		allPaths, _ = GetLeavesPathOrderly(js)
+	}
+	for _, path := range SimilarPaths(allPaths, samplePath) {
+		js = RmDupEleOnce(js, path)
+	}
+	return js
+}
