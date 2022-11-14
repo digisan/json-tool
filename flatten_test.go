@@ -18,11 +18,13 @@ func TestFlattenObject(t *testing.T) {
 
 	m, err := FlattenStr(js)
 	fmt.Println(len(m), err)
-	// I := 0
-	// for k, v := range m {
-	// 	fmt.Printf("%02d --- %v: %v\n", I, k, v)
-	// 	I++
-	// }
+
+	I := 0
+	for k, v := range m {
+		fmt.Printf("%02d --- %v: %v\n", I, k, v)
+		I++
+	}
+
 	ks, _ := Map2KVs(m, nil, nil)
 	fmt.Println(len(ks))
 
@@ -30,9 +32,10 @@ func TestFlattenObject(t *testing.T) {
 
 	paths, _ := GetLeavesPathOrderly(js)
 	fmt.Println(len(paths))
-	// for i, p := range paths {
-	// 	fmt.Printf("%02d --- %v: %v\n", i, p, "tbd")
-	// }
+
+	for i, p := range paths {
+		fmt.Printf("%02d --- %v: %v\n", i, p, "tbd")
+	}
 
 	fmt.Println("--------------------------------------------------")
 
