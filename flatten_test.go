@@ -25,7 +25,7 @@ func TestFlattenObject(t *testing.T) {
 		I++
 	}
 
-	ks, _ := Map2KVs(m, nil, nil)
+	ks, _ := MapToKVs(m, nil, nil)
 	fmt.Println(len(ks))
 
 	fmt.Println("--------------------------------------------------")

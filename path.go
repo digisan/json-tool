@@ -10,7 +10,6 @@ import (
 
 	. "github.com/digisan/go-generics/v2"
 	"github.com/digisan/gotk/strs"
-	tc "github.com/digisan/gotk/type-check"
 	"github.com/tidwall/gjson"
 )
 
@@ -26,7 +25,7 @@ func OPath2TPath(op string) (tp string, err error) {
 	iNumGrp := []int{}
 	ss := []string{}
 	for i, s := range sSplit(op, ".") {
-		if !tc.IsNumeric(s) {
+		if !IsNumeric(s) {
 			ss = append(ss, s)
 		} else {
 			iNumGrp = append(iNumGrp, i)
@@ -46,7 +45,7 @@ func OPath2TPath(op string) (tp string, err error) {
 func ParentPath(path string) string {
 	ss := sSplit(path, ".")
 	if len(ss) >= 2 {
-		if tc.IsNumeric(ss[len(ss)-2]) {
+		if IsNumeric(ss[len(ss)-2]) {
 			return sJoin(ss[:len(ss)-2], ".")
 		}
 	}
@@ -270,7 +269,7 @@ func SimilarPaths(paths []string, path string) []string {
 	reSimilarPath := func(path string) *regexp.Regexp {
 		sb := strings.Builder{}
 		for _, seg := range strings.Split(path, ".") {
-			if tc.IsNumeric(seg) {
+			if IsNumeric(seg) {
 				sb.WriteString("\\d+")
 			} else {
 				sb.WriteString(seg)
