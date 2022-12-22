@@ -5,11 +5,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/digisan/gotk/misc"
+	"github.com/digisan/gotk/track"
 )
 
 func TestJSONBreakArrCont(t *testing.T) {
-	defer misc.TrackTime(time.Now())
+	defer track.TrackTime(time.Now())
 
 	bytes, err := os.ReadFile("./data/Activities.json")
 	failOnErr("%v", err)
@@ -23,7 +23,7 @@ func TestJSONBreakArrCont(t *testing.T) {
 }
 
 func TestJSONBreakBlkContV2(t *testing.T) {
-	defer misc.TrackTime(time.Now())
+	defer track.TrackTime(time.Now())
 
 	if bytes, err := os.ReadFile("./data/Activity.json"); err == nil {
 		// str := Fmt(string(bytes), "  ")

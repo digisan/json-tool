@@ -52,7 +52,7 @@ func getPrefixChunkTrait(mLvlNChunk map[int]int, prefLvl int) string {
 }
 
 func prefix2key(prefix string) string {
-	return strs.SplitPartFromLast(strings.TrimSuffix(prefix, `":`), `"`, 1)
+	return strs.SplitPartFromLastTo[string](strings.TrimSuffix(prefix, `":`), `"`, 1)
 }
 
 func markPrefix(prefix, trait, sp string, n int) (idPrefixGrp []string) {
@@ -119,7 +119,7 @@ func FixOneDupKeyOnce(js, prefix string) (string, bool) {
 		for _, idPrefix := range idPrefixes {
 			idkey := prefix2key(idPrefix)
 			if strings.Contains(path, idkey) {
-				path = strs.SplitPart(path, idkey, 0) + idkey
+				path = strs.SplitPartTo[string](path, idkey, 0) + idkey
 				val := gjson.Get(jsx, path).Raw
 
 				// fmt.Println(path, val)
@@ -129,7 +129,7 @@ func FixOneDupKeyOnce(js, prefix string) (string, bool) {
 				val = strings.TrimSuffix(val, "]")
 
 				rmPaths = append(rmPaths, path)
-				path = strs.SplitPart(path, "^", 0)
+				path = strs.SplitPartTo[string](path, "^", 0)
 				jsx, _ = sjson.SetRaw(jsx, fmt.Sprintf("%s.%d", path, I), val)
 				I++
 				break

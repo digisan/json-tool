@@ -53,7 +53,7 @@ func ParentPath(path string) string {
 }
 
 func FieldName(path string) string {
-	return strs.SplitPartFromLast(path, ".", 1)
+	return strs.SplitPartFromLastTo[string](path, ".", 1)
 }
 
 func NewChild(fieldPath, childName string) string {
