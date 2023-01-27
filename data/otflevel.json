@@ -25,11 +25,9 @@
             }
         },
         "original": {
-            "additional_schools": [],
             "assessor_participation": {
                 "person": {
                     "first_name": "Sabine",
-                    "identifiers": [],
                     "last_name": "Hoffmann",
                     "user": {
                         "email": "sabinehoffmann835@gmail.com"
@@ -38,7 +36,6 @@
                 "research": false
             },
             "descriptor": "<ul>\n<li>Individual teacher comment - what you did well.</li>\n</ul>",
-            "notes": "",
             "parent_comments": "<p>Teacher Comments</p>",
             "school": {
                 "identifiers": [
@@ -61,7 +58,6 @@
                     "student": {
                         "atsi": true,
                         "dob": "2013-11-21",
-                        "eald": null,
                         "first_name": "Kandra",
                         "gender": 2,
                         "identifiers": [
@@ -70,13 +66,10 @@
                                 "provider": "Research Student ID"
                             }
                         ],
-                        "last_name": "Bosarge",
-                        "lbote": null
+                        "last_name": "Bosarge"
                     }
                 },
-                "hard_copy": true,
-                "name": "",
-                "work": null
+                "hard_copy": true
             },
             "teaching_points": "<ul>\n<li>Individual teacher comment -&nbsp;start to</li>\n</ul>",
             "test": {
@@ -85,7 +78,6 @@
                 "description": "Test data for NSIP",
                 "name": "Test project for NSIP",
                 "scale": "Narrative Scale",
-                "termoccurrence": null,
                 "years": [
                     "Year 1",
                     "Year 2"
