@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	gotkio "github.com/digisan/gotk/io"
+	fd "github.com/digisan/gotk/file-dir"
 )
 
 func TestScanObjectInArray(t *testing.T) {
@@ -35,7 +35,7 @@ func TestScanObjectInArray(t *testing.T) {
 			// }
 			if I > 0 {
 				fPln(I, "cOut")
-				gotkio.MustWriteFile(fSf("dump%02d.json", I), []byte(out))
+				fd.MustWriteFile(fSf("dump%02d.json", I), []byte(out))
 			}
 			I++
 		}
@@ -88,7 +88,7 @@ func TestScanObject(t *testing.T) {
 			if I > 0 {
 				fPln(I)
 				// fPln(rst.Obj)
-				gotkio.MustWriteFile(fSf("dump%02d.json", I), []byte(rst.Obj))
+				fd.MustWriteFile(fSf("dump%02d.json", I), []byte(rst.Obj))
 			}
 
 			I++
