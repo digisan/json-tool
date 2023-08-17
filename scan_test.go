@@ -107,7 +107,7 @@ func TestScanObject(t *testing.T) {
 	}
 }
 
-func Test_analyse(t *testing.T) {
+func TestAnalyse(t *testing.T) {
 
 	l1 := `[  {`
 	l2 := `"Id": 1,`

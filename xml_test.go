@@ -6,6 +6,6 @@ func TestCvt2XML(t *testing.T) {
 	out := MkSglEleBlk("ROOT", "~~~", true)
 	fPln(out)
 	mav := map[string]any{"a": "b", "c": 12}
-	xmlstr := Cvt2XML(out, mav)
-	fPln(xmlstr)
+	xmlStr := Cvt2XML(out, mav)
+	fPln(xmlStr)
 }

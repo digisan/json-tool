@@ -109,15 +109,15 @@ func BreakArr(str string) (values []string, ok bool) {
 // in return 'values', array types are broken into duplicated names & its single value block
 // one 'value' is like '{...}', 'names' may have duplicated names
 func BreakMulEleBlkV2(str string) (names, values []string) {
-	mIndEles := make(map[int][]string)
+	mIndElems := make(map[int][]string)
 	Names, Values := BreakMulEleBlk(str)
 	for i, Val := range Values {
 		if elements, ok := BreakArr(Val); ok {
-			mIndEles[i] = elements
+			mIndElems[i] = elements
 		}
 	}
 	for i, Val := range Values {
-		if elements, ok := mIndEles[i]; ok {
+		if elements, ok := mIndElems[i]; ok {
 			for _, ele := range elements {
 				names = append(names, Names[i])
 				values = append(values, ele)

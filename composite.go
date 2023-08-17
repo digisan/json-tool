@@ -169,13 +169,13 @@ func TransformUnderAllRules(mData map[string]any, data []byte) string {
 }
 
 // func Composite(m map[string]any, filter func(path string) bool) string {
-// 	jsonbytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
+// 	jsonBytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
 // 	for path, value := range m {
 // 		if (filter == nil) || (filter != nil && filter(path)) {
-// 			jsonbytes, _ = sjson.SetBytes(jsonbytes, path, value)
+// 			jsonBytes, _ = sjson.SetBytes(jsonBytes, path, value)
 // 		}
 // 	}
-// 	return string(jsonbytes)
+// 	return string(jsonBytes)
 // }
 
 func Composite(m map[string]any, fm func(path string, value any) (p string, v any, raw bool)) string {
@@ -215,22 +215,22 @@ func Composite2(m map[string]any, fm func(path string, value any) (p []string, v
 }
 
 func CompositeExcl(m map[string]any, exclPaths ...string) string {
-	jsonbytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
+	jsonBytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
 	for path, value := range m {
 		if exclPaths != nil && In(path, exclPaths...) {
 			continue
 		}
-		jsonbytes, _ = sjson.SetBytes(jsonbytes, path, value)
+		jsonBytes, _ = sjson.SetBytes(jsonBytes, path, value)
 	}
-	return string(jsonbytes)
+	return string(jsonBytes)
 }
 
 func CompositeIncl(m map[string]any, inclPaths ...string) string {
-	jsonbytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
+	jsonBytes, _ := sjson.SetBytes([]byte(""), "", "") // empty json doc to reinflate with tuples
 	for path, value := range m {
 		if inclPaths != nil && In(path, inclPaths...) {
-			jsonbytes, _ = sjson.SetBytes(jsonbytes, path, value)
+			jsonBytes, _ = sjson.SetBytes(jsonBytes, path, value)
 		}
 	}
-	return string(jsonbytes)
+	return string(jsonBytes)
 }

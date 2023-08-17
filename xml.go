@@ -13,18 +13,18 @@ func Cvt2XML(str string, mav map[string]any) string {
 	json.Unmarshal([]byte(str), &m)
 	bytes, err := mxj.AnyXmlIndent(m, "", "    ", "")
 	failOnErr("%v", err)
-	xmlstr := string(bytes)
-	xmlstr = sReplaceAll(xmlstr, "<>", "")
-	xmlstr = sReplaceAll(xmlstr, "</>", "")
-	xmlstr = sTrim(xmlstr, " \t\n")
+	xmlStr := string(bytes)
+	xmlStr = sReplaceAll(xmlStr, "<>", "")
+	xmlStr = sReplaceAll(xmlStr, "</>", "")
+	xmlStr = sTrim(xmlStr, " \t\n")
 
 	attrs := []string{}
 	for a, v := range mav {
 		attrs = append(attrs, fSf(`%s="%v"`, a, v))
 	}
-	if p := sIndex(xmlstr, ">"); len(attrs) > 0 {
-		xmlstr = xmlstr[:p] + " " + sJoin(attrs, " ") + xmlstr[p:]
+	if p := sIndex(xmlStr, ">"); len(attrs) > 0 {
+		xmlStr = xmlStr[:p] + " " + sJoin(attrs, " ") + xmlStr[p:]
 	}
 
-	return xmlstr
+	return xmlStr
 }

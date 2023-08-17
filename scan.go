@@ -102,7 +102,7 @@ const (
 )
 
 // ScanObject : any format json array should be OK.
-func ScanObject(ctx context.Context, r io.Reader, mustarray, check bool, style OutStyle) (<-chan ScanResult, bool) {
+func ScanObject(ctx context.Context, r io.Reader, mustArray, check bool, style OutStyle) (<-chan ScanResult, bool) {
 
 	var (
 		cOut = make(chan ScanResult)
@@ -262,7 +262,7 @@ func ScanObject(ctx context.Context, r io.Reader, mustarray, check bool, style O
 				if s := sTrim(line, " \t"); len(s) > 0 {
 					if s[0] != '[' {
 						ja = false
-						if mustarray {
+						if mustArray {
 							return // if not json array, do not ingest
 						}
 					}

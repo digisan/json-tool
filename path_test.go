@@ -62,29 +62,29 @@ func TestGetFieldPaths(t *testing.T) {
 	mSibling, _ := FamilyTree(js)
 	paths, _ := GetLeavesPathOrderly(js)
 
-	lookfor := "value"
+	lookFor := "value"
 
-	fpaths1 := GetFieldPaths(lookfor, mSibling)
-	fmt.Println(len(fpaths1))
-	for _, p := range fpaths1 {
+	fPaths1 := GetFieldPaths(lookFor, mSibling)
+	fmt.Println(len(fPaths1))
+	for _, p := range fPaths1 {
 		fmt.Println(p)
 	}
 
-	fmt.Println("--------------------------------", lookfor, len(paths))
+	fmt.Println("--------------------------------", lookFor, len(paths))
 
-	fpaths2 := GetLeafPathsOrderly(lookfor, paths)
-	fmt.Println(len(fpaths2))
-	for _, p := range fpaths2 {
+	fPaths2 := GetLeafPathsOrderly(lookFor, paths)
+	fmt.Println(len(fPaths2))
+	for _, p := range fPaths2 {
 		fmt.Println(p)
 	}
 
-	fmt.Println("--------------------------------", lookfor)
+	fmt.Println("--------------------------------", lookFor)
 
-	fmt.Println(Equals(fpaths1, fpaths2))
+	fmt.Println(Equals(fPaths1, fPaths2))
 
-	fmt.Println(Minus(fpaths1, fpaths2))
+	fmt.Println(Minus(fPaths1, fPaths2))
 
-	fmt.Println(Minus(fpaths2, fpaths1))
+	fmt.Println(Minus(fPaths2, fPaths1))
 
 }
 

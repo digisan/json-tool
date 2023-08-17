@@ -49,8 +49,8 @@ func SglEleBlkCont(str string) (string, string) {
 }
 
 // SglEleAttrVal : attributes MUST be ahead of other sub-elements
-func SglEleAttrVal(str, attr, attrprefix string) (val string, ok bool) {
-	lookfor := fSf(`%s%s`, attrprefix, attr)
+func SglEleAttrVal(str, attr, attrPrefix string) (val string, ok bool) {
+	lookFor := fSf(`%s%s`, attrPrefix, attr)
 	dqGrp := []int{}
 SCAN:
 	for i := 0; i < len(str); i++ {
@@ -64,7 +64,7 @@ SCAN:
 	dqV1, dqV2 := 0, 0
 	for i := 0; i < len(dqGrp); i += 2 {
 		dq1, dq2 := dqGrp[i], dqGrp[i+1]
-		if str[dq1+1:dq2] == lookfor {
+		if str[dq1+1:dq2] == lookFor {
 			dqV1, dqV2 = dqGrp[i+2], dqGrp[i+3]
 			ok = true
 			break
