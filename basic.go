@@ -17,35 +17,6 @@ func IsValidStr(str string) bool {
 	return IsValid([]byte(str))
 }
 
-// Fmt :
-func Fmt(bytes []byte, indent string) []byte {
-	var m any
-	err := json.Unmarshal(bytes, &m)
-	failOnErr("%v", err)
-	bytes, err = json.MarshalIndent(&m, "", indent)
-	failOnErr("%v", err)
-	return bytes
-}
-
-func FmtStr(str, indent string) string {
-	return string(Fmt([]byte(str), indent))
-}
-
-// TryFmt :
-func TryFmt(bytes []byte, indent string) []byte {
-	var m any
-	if err := json.Unmarshal(bytes, &m); err != nil {
-		return bytes
-	}
-	bytes, err := json.MarshalIndent(&m, "", indent)
-	failOnErr("%v", err)
-	return bytes
-}
-
-func TryFmtStr(str, indent string) string {
-	return string(TryFmt([]byte(str), indent))
-}
-
 // Minimize :
 func Minimize(str string, check bool) string {
 
