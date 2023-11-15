@@ -6,9 +6,9 @@ toolchain go1.21.0
 
 require (
 	github.com/clbanning/mxj v1.8.4
-	github.com/digisan/go-generics v0.4.1
-	github.com/digisan/gotk v0.4.9
-	github.com/digisan/logkit v0.2.13
+	github.com/digisan/go-generics v0.4.2
+	github.com/digisan/gotk v0.4.11
+	github.com/digisan/logkit v0.2.14
 	github.com/tidwall/gjson v1.17.0
 	github.com/tidwall/sjson v1.2.5
 )
