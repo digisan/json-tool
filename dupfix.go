@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	. "github.com/digisan/go-generics/v2"
+	. "github.com/digisan/go-generics"
 	"github.com/digisan/gotk/strs"
 	lk "github.com/digisan/logkit"
 	"github.com/tidwall/gjson"

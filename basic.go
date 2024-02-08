@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
-	. "github.com/digisan/go-generics/v2"
+	. "github.com/digisan/go-generics"
 )
 
 // IsValid :

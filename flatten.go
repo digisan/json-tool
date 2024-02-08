@@ -3,7 +3,7 @@ package jsontool
 import (
 	"encoding/json"
 
-	. "github.com/digisan/go-generics/v2"
+	. "github.com/digisan/go-generics"
 )
 
 func FlattenStr(jsonObj string) (map[string]any, error) {

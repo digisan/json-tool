@@ -1,7 +1,7 @@
 package validator
 
 import (
-	. "github.com/digisan/go-generics/v2"
+	. "github.com/digisan/go-generics"
 	dt "github.com/digisan/gotk/data-type"
 	"github.com/tidwall/gjson"
 )
