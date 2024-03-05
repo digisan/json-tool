@@ -84,7 +84,8 @@ func FmtFileJS(fPath string) (string, error) {
 		fmt.Println("Error:", err)
 		return "", err
 	}
-	return ConstBytesToStr(output), nil
+	js := ConstBytesToStr(output)
+	return js, os.WriteFile(fPath, []byte(js), os.ModePerm)
 }
 
 func FmtJS(str string) (string, error) {
