@@ -1,12 +1,12 @@
 module github.com/digisan/json-tool
 
-go 1.22.0
+go 1.22.1
 
 require (
 	github.com/clbanning/mxj v1.8.4
 	github.com/digisan/go-generics v0.5.1
 	github.com/digisan/gotk v0.5.1
-	github.com/digisan/logkit v0.3.1
+	github.com/digisan/logkit v0.3.3
 	github.com/tidwall/gjson v1.17.1
 	github.com/tidwall/sjson v1.2.5
 )
