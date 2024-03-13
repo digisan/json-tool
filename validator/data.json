@@ -1,0 +1,19 @@
+{
+    "Null": null,
+    "EmptyStr": "",
+    "BlankStr": "  ",
+    "EmptyObject": {   },
+    "EmptyArray": [   ],
+    "NullElemArray": [
+        null
+    ],
+    "EmptyStrElemArray": [
+        ""
+    ],
+    "EmptyArrElemArray": [
+        []
+    ],
+    "EmptyObjElemArray": [
+        {}
+    ]
+}
