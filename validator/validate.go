@@ -122,6 +122,30 @@ func IsXArray(r gjson.Result, f func(e gjson.Result) bool) bool {
 	return false
 }
 
+func IsNestedXArray(r gjson.Result, f func(e gjson.Result) bool, allowEmptyArrElem bool) bool {
+	if IsNestedArray(r) {
+		nEmptyElemArr := 0
+		for _, a := range r.Array() {
+			for _, e := range a.Array() {
+				if !f(e) {
+					return false
+				}
+			}
+			if len(a.Array()) == 0 {
+				nEmptyElemArr++
+			}
+		}
+		if n := len(r.Array()); n == 0 || n == nEmptyElemArr {
+			return false
+		}
+		if !allowEmptyArrElem {
+			return nEmptyElemArr == 0
+		}
+		return true
+	}
+	return false
+}
+
 func IsNullElemArray(r gjson.Result) bool {
 	return IsXArray(r, func(e gjson.Result) bool {
 		return IsNull(e)
@@ -170,76 +194,26 @@ func IsNestedArray(r gjson.Result) bool {
 	})
 }
 
-////////////////////////
+func IsNestedStrArray(r gjson.Result, allowEmptyArrElem bool) bool {
+	return IsNestedXArray(r, func(e gjson.Result) bool {
+		return IsStr(e)
+	}, allowEmptyArrElem)
+}
 
-// func IsAllEmptyStrElemArr(r gjson.Result) bool {
-// 	if IsArr(r) {
-// 		for _, e := range r.Array() {
-// 			if !IsEmptyStr(e) {
-// 				return false
-// 			}
-// 		}
-// 		return true
-// 	}
-// 	return false
-// }
+func IsNestedPlainStrArray(r gjson.Result, allowEmptyArrElem bool) bool {
+	return IsNestedXArray(r, func(e gjson.Result) bool {
+		return IsPlainStr(e)
+	}, allowEmptyArrElem)
+}
 
-// func IsNestedEmptyArr(r gjson.Result) bool {
-// 	if IsArr(r) {
-// 		for _, e := range r.Array() {
-// 			if !IsEmptyArr(e) {
-// 				return false
-// 			}
-// 		}
-// 		return true
-// 	}
-// 	return false
-// }
+func IsNestedHTMLStrArray(r gjson.Result, allowEmptyArrElem bool) bool {
+	return IsNestedXArray(r, func(e gjson.Result) bool {
+		return IsHTMLStr(e)
+	}, allowEmptyArrElem)
+}
 
-// func IsNestedStrArr(r gjson.Result) bool {
-// 	if IsArr(r) {
-// 		for _, e := range r.Array() {
-// 			if !IsStrArr(e) {
-// 				return false
-// 			}
-// 		}
-// 		return true
-// 	}
-// 	return false
-// }
-
-// func IsNestedPlainStrArr(r gjson.Result) bool {
-// 	if IsArr(r) {
-// 		for _, e := range r.Array() {
-// 			if !IsPlainStrArr(e) {
-// 				return false
-// 			}
-// 		}
-// 		return true
-// 	}
-// 	return false
-// }
-
-// func IsNestedHTMLStrArr(r gjson.Result) bool {
-// 	if IsArr(r) {
-// 		for _, e := range r.Array() {
-// 			if !IsHTMLStrArr(e) {
-// 				return false
-// 			}
-// 		}
-// 		return true
-// 	}
-// 	return false
-// }
-
-// func IsNestedObjArr(r gjson.Result) bool {
-// 	if IsArr(r) {
-// 		for _, e := range r.Array() {
-// 			if !IsObjArr(e) {
-// 				return false
-// 			}
-// 		}
-// 		return true
-// 	}
-// 	return false
-// }
+func IsNestedObjArray(r gjson.Result, allowEmptyArrElem bool) bool {
+	return IsNestedXArray(r, func(e gjson.Result) bool {
+		return IsObj(e)
+	}, allowEmptyArrElem)
+}

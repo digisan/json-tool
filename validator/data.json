@@ -2,8 +2,8 @@
     "Null": null,
     "EmptyStr": "",
     "BlankStr": "  ",
-    "EmptyObject": {   },
-    "EmptyArray": [   ],
+    "EmptyObject": {},
+    "EmptyArray": [],
     "NullElemArray": [
         null
     ],
@@ -15,5 +15,21 @@
     ],
     "EmptyObjElemArray": [
         {}
+    ],
+    "NestedStrArray": [
+        [
+            "null"
+        ],
+        [
+            "abc"
+        ],
+        [
+            "123"
+        ],
+        [
+            "true",
+            "false"
+        ],
+        []
     ]
 }

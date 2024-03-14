@@ -38,6 +38,9 @@ func report(js string, fields ...string) {
 		if IsEmptyElemArray(r) {
 			fmt.Printf("'%s' IsEmptyElemArray\n", field)
 		}
+		if IsNestedStrArray(r, true) {
+			fmt.Printf("'%s' IsNestedStrArray\n", field)
+		}
 		fmt.Println()
 	}
 }
@@ -68,6 +71,7 @@ func TestTemp(t *testing.T) {
 		"EmptyStrElemArray",
 		"EmptyArrElemArray",
 		"EmptyObjElemArray",
+		"NestedStrArray",
 	)
 
 	// if IsNull(r) {
