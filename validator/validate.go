@@ -80,6 +80,12 @@ func HasSomeValue(r gjson.Result) bool {
 	if IsEmptyArr(r) {
 		return false
 	}
+	if IsNullElemArray(r) {
+		return false
+	}
+	if IsEmptyElemArray(r) {
+		return false
+	}
 	return true
 }
 
