@@ -4,9 +4,9 @@ go 1.22.2
 
 require (
 	github.com/clbanning/mxj v1.8.4
-	github.com/digisan/go-generics v0.5.3
-	github.com/digisan/gotk v0.5.6
-	github.com/digisan/logkit v0.3.6
+	github.com/digisan/go-generics v0.5.4
+	github.com/digisan/gotk v0.5.7
+	github.com/digisan/logkit v0.3.7
 	github.com/tidwall/gjson v1.17.1
 	github.com/tidwall/sjson v1.2.5
 )
