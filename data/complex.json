@@ -1,77 +1,77 @@
 {
-    "problems": [
+  "problems": [
+    {
+      "Diabetes": [
         {
-            "Diabetes": [
+          "medications": [
+            {
+              "medicationsClasses": [
                 {
-                    "medications": [
+                  "className": [
+                    {
+                      "associatedDrug": [
                         {
-                            "medicationsClasses": [
-                                {
-                                    "className": [
-                                        {
-                                            "associatedDrug": [
-                                                {
-                                                    "name": "asprin",
-                                                    "dose": "",
-                                                    "strength": "500 mg"
-                                                }
-                                            ],
-                                            "associatedDrug#2": [
-                                                {
-                                                    "name": "somethingElse",
-                                                    "dose": "",
-                                                    "strength": "600 mg"
-                                                }
-                                            ]
-                                        }
-                                    ],
-                                    "className2": [
-                                        {
-                                            "associatedDrug": [
-                                                {
-                                                    "name": "asprin",
-                                                    "dose": "",
-                                                    "strength": "700 mg"
-                                                }
-                                            ],
-                                            "associatedDrug#2": [
-                                                {
-                                                    "name": "somethingElse",
-                                                    "dose": "",
-                                                    "strength": "800 mg"
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
+                          "name": "asprin",
+                          "dose": "",
+                          "strength": "500 mg"
                         }
-                    ],
-                    "labs": [
+                      ],
+                      "associatedDrug#2": [
                         {
-                            "missing_field": "missing_value"
+                          "name": "somethingElse",
+                          "dose": "",
+                          "strength": "600 mg"
                         }
-                    ],
-                    "Object": {
-                        "a": 1230,
-                        "b": 2340,
-                        "c": "0abc\"{\""
+                      ]
                     }
+                  ],
+                  "className2": [
+                    {
+                      "associatedDrug": [
+                        {
+                          "name": "asprin",
+                          "dose": "",
+                          "strength": "700 mg"
+                        }
+                      ],
+                      "associatedDrug#2": [
+                        {
+                          "name": "somethingElse",
+                          "dose": "",
+                          "strength": "800 mg"
+                        }
+                      ]
+                    }
+                  ]
                 }
-            ],
-            "Asthma": [
-                {}
-            ],
-            "Object": {
-                "a": 123,
-                "b": 234,
-                "c": "abc\"{\""
-            },
-            "Object1": {
-                "a": 345,
-                "b": 456,
-                "c": "def\"{\""
+              ]
             }
+          ],
+          "labs": [
+            {
+              "missing_field": "missing_value"
+            }
+          ],
+          "Object": {
+            "a": 1230,
+            "b": 2340,
+            "c": "0abc\"{\""
+          }
         }
-    ]
+      ],
+      "Asthma": [
+        {}
+      ],
+      "Object": {
+        "a": 123,
+        "b": 234,
+        "c": "abc\"{\""
+      },
+      "Object1": {
+        "a": 345,
+        "b": 456,
+        "c": "def\"{\""
+      }
+    }
+  ]
 }

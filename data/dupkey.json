@@ -4,51 +4,33 @@
       "Id": 1,
       "Name": "Ahmad,Ahmad",
       "Age": [
-        {
-          "age": "21"
-        }
+        "15"
       ],
       "Object": {
-        "Age": 11,
+        "Age": 22,
         "Object": {
           "Age": 111
-        },
-        "Age": 22
+        }
       },
-      "Age": [
-        12
-      ],
       "Object1": {
         "Age": 11
-      },
-      "Age": [
-        "15"
-      ]
+      }
     },
     {
       "Id": 1,
       "Name": "Ahmad,Ahmad",
       "Age": [
-        {
-          "age": "21"
-        }
+        "15"
       ],
       "Object": {
-        "Age": 11,
+        "Age": 22,
         "Object": {
           "Age": 111
-        },
-        "Age": 22
+        }
       },
-      "Age": [
-        12
-      ],
       "Object1": {
         "Age": 11
-      },
-      "Age": [
-        "15"
-      ]
+      }
     }
   ]
 }
