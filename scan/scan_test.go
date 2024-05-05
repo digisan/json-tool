@@ -5,8 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
-
-	. "github.com/digisan/go-generics"
+	// . "github.com/digisan/go-generics"
 )
 
 func TestScanJsonLine(t *testing.T) {
@@ -29,9 +28,13 @@ func TestScanJsonLine(t *testing.T) {
 	}
 	for _, de := range des {
 
-		if In(de.Name(), "FlattenTest.json", "complex.json") {
-			continue
-		}
+		// if In(de.Name(), "FlattenTest.json") {
+		// 	continue
+		// }
+
+		// if NotIn(de.Name(), "complex.json") {
+		// 	continue
+		// }
 
 		fPath := filepath.Join("../data", de.Name())
 		fOut := filepath.Join("./", de.Name())

@@ -2,6 +2,7 @@ package scan
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
@@ -135,8 +136,12 @@ func fnSetCurrentKeyLevel() func(above, this, below LineInfo) string {
 
 	return func(above, this, below LineInfo) string {
 
-		flagCloseObj := false
-		flagCloseArr := false
+		var (
+			flagCloseObj = false
+			flagCloseArr = false
+			// flagEmptyObj = false
+			// flagEmptyArr = false
+		)
 
 		if In(this.lnType, KV, KV_STR, KV_OBJ_OPEN, KV_ARR_OPEN) {
 			mLvlKey[this.lvl] = this.key
@@ -151,8 +156,16 @@ func fnSetCurrentKeyLevel() func(above, this, below LineInfo) string {
 			clrAfter(this.lvl)
 			flagCloseArr = true
 		}
+		// if this.ln == OBJ_EMPTY {
+		// 	clrAfter(this.lvl)
+		// 	flagEmptyObj = true
+		// }
+		// if this.ln == ARR_EMPTY {
+		// 	clrAfter(this.lvl)
+		// 	flagEmptyArr = true
+		// }
 
-		if this.ln == OBJ_OPEN {
+		if In(this.ln, OBJ_OPEN, OBJ_EMPTY) {
 
 			clrThisAndAfter(this.lvl)
 			_, values := MapToKVs(mLvlKey, func(ki, kj int) bool {
@@ -202,7 +215,8 @@ func fnSetCurrentKeyLevel() func(above, this, below LineInfo) string {
 		_, values := MapToKVs(mLvlKey, func(ki, kj int) bool {
 			return ki < kj
 		}, nil)
-		return strings.Join(values, ".") + IF(flagCloseObj, "}", "") + IF(flagCloseArr, "]", "")
+		suffix := IF(flagCloseObj, "}", "") + IF(flagCloseArr, "]", "") // + IF(flagEmptyObj, "{}", "") + IF(flagEmptyArr, "[]", "")
+		return strings.Join(values, ".") + suffix
 	}
 }
 
@@ -240,7 +254,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) error {
 		if _, ok := mCheck[path]; !ok {
 			mCheck[path] = struct{}{}
 		} else {
-			panic("path validation failed")
+			log.Fatalf("path validation failed: [%d] '%s'", I, path)
 		}
 
 		///////////////////////////////////////////////////////////////////////////
