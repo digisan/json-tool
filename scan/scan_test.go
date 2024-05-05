@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	. "github.com/digisan/go-generics"
@@ -22,13 +23,17 @@ func TestScanJsonLine(t *testing.T) {
 		Fn_Elem_Str:    nil,
 	}
 
-	const DIR = "../data"
+	const DIR = "../temp"
 	des, err := os.ReadDir(DIR)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	for _, de := range des {
+
+		if !strings.HasSuffix(de.Name(), ".json") {
+			continue
+		}
 
 		if In(de.Name(), "FlattenTest.json") {
 			continue
