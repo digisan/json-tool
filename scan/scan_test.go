@@ -22,7 +22,8 @@ func TestScanJsonLine(t *testing.T) {
 		Fn_Elem_Str:    nil,
 	}
 
-	des, err := os.ReadDir("../data")
+	const DIR = "../data"
+	des, err := os.ReadDir(DIR)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -33,7 +34,7 @@ func TestScanJsonLine(t *testing.T) {
 			continue
 		}
 
-		fPath := filepath.Join("../data", de.Name())
+		fPath := filepath.Join(DIR, de.Name())
 		fOut := filepath.Join("./", de.Name())
 
 		fmt.Printf("testing... %s\n", fPath)
