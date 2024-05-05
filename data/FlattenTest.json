@@ -1,5 +1,5 @@
 {
-  "array0": [
+  "array-0": [
     1,
     null,
     false,
@@ -29,13 +29,13 @@
       ]
     ]
   ],
-  "array1": [
+  "array-1": [
     1,
     null,
     false,
     "abc"
   ],
-  "array2": [
+  "array-2": [
     7,
     8,
     "ok",
@@ -136,13 +136,13 @@
       ]
     }
   ],
-  "object1": {
-    "object11": {
+  "object-1": {
+    "object-11": {
       "a": "b",
       "c": "d",
       "e": "f"
     },
-    "object12": {
+    "object-12": {
       "a": "B",
       "c": "D",
       "e": "F"

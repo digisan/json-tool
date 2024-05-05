@@ -113,7 +113,7 @@ type LineInfo struct {
 	lvl    int
 }
 
-func fnSetCurrentKeyLevel() func(above, this, below LineInfo) string {
+func fnSetCurrentKeyLevel() func(above, this, below LineInfo) (string, error) {
 
 	mLvlKey := make(map[int]string)
 	mPathIdx := make(map[string]int)
@@ -134,7 +134,7 @@ func fnSetCurrentKeyLevel() func(above, this, below LineInfo) string {
 		}
 	}
 
-	return func(above, this, below LineInfo) string {
+	return func(above, this, below LineInfo) (string, error) {
 
 		var (
 			flagCloseObj = false
@@ -164,6 +164,11 @@ func fnSetCurrentKeyLevel() func(above, this, below LineInfo) string {
 		// 	clrAfter(this.lvl)
 		// 	flagEmptyArr = true
 		// }
+
+		if In(this.ln, ARR_OPEN) && above.line != JUNK {
+			msg := "arrays as another array's direct elements cannot be processed now"
+			return "", fmt.Errorf("%v", msg)
+		}
 
 		if In(this.ln, OBJ_OPEN, OBJ_EMPTY) {
 
@@ -216,11 +221,15 @@ func fnSetCurrentKeyLevel() func(above, this, below LineInfo) string {
 			return ki < kj
 		}, nil)
 		suffix := IF(flagCloseObj, "}", "") + IF(flagCloseArr, "]", "") // + IF(flagEmptyObj, "{}", "") + IF(flagEmptyArr, "[]", "")
-		return strings.Join(values, ".") + suffix
+		return strings.Join(values, ".") + suffix, nil
 	}
 }
 
 ///////////////////////////////////////////////////////////////
+
+var (
+	TrackMode = false
+)
 
 func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) error {
 
@@ -248,8 +257,14 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) error {
 			}
 		}
 
-		path := SetCurrentKeyLevel(lnInfo3[0], lnInfo3[1], lnInfo3[2])
-		// fmt.Printf("%6d: %v\n", I, path)
+		path, err := SetCurrentKeyLevel(lnInfo3[0], lnInfo3[1], lnInfo3[2])
+		if err != nil {
+			log.Fatalf("[%d] - '%s' - %v", I, line, err)
+		} else {
+			if TrackMode {
+				fmt.Printf("%6d: %v\n", I, path)
+			}
+		}
 
 		if _, ok := mCheck[path]; !ok {
 			mCheck[path] = struct{}{}
