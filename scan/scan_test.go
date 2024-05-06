@@ -23,7 +23,7 @@ func TestScanJsonLine(t *testing.T) {
 		Fn_Elem_Str:    nil,
 	}
 
-	const DIR = "../temp"
+	const DIR = "../data1"
 	des, err := os.ReadDir(DIR)
 	if err != nil {
 		fmt.Println(err)
@@ -43,7 +43,11 @@ func TestScanJsonLine(t *testing.T) {
 		fOut := filepath.Join("./", de.Name())
 
 		fmt.Printf("testing... %s\n", fPath)
-		fmt.Println(ScanJsonLine(fPath, fOut, opt)) // *** //
+		paths, err := ScanJsonLine(fPath, fOut, opt) // *** //
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("paths count... %d\n", len(paths))
 
 		// original copying check
 		data1, err := os.ReadFile(fPath)

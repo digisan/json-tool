@@ -231,15 +231,15 @@ var (
 	TrackMode = false
 )
 
-func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) error {
+func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, err error) {
 
 	if _, err := jt.FmtFileJS(fPathIn); err != nil {
-		return err
+		return nil, err
 	}
 
 	SetCurrentKeyLevel := fnSetCurrentKeyLevel()
-	I := 0
-	mCheck := make(map[string]struct{})
+	I := 0                              // line number
+	mCheck := make(map[string]struct{}) // for validating paths
 
 	fd.FileLineScanEx(fPathIn, 1, 1, JUNK, func(line string, cache []string) (bool, string) {
 
@@ -266,6 +266,10 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) error {
 			}
 		}
 
+		// collect every path
+		paths = append(paths, path)
+
+		// simple validate path
 		if _, ok := mCheck[path]; !ok {
 			mCheck[path] = struct{}{}
 		} else {
@@ -361,19 +365,19 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) error {
 	}, fPathOut)
 
 	if _, err := jt.FmtFileJS(fPathOut); err != nil {
-		return err
+		return nil, err
 	}
 
 	if len(fPathOut) > 0 {
 		data, err := os.ReadFile(fPathOut)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		if len(data) == 0 {
-			return fmt.Errorf("FmtFileJS Error After FileLineScanEx")
+			return nil, fmt.Errorf("FmtFileJS Error After FileLineScanEx")
 		}
 	}
-	return nil
+	return paths, nil
 }
 
 ///////////////////////////////////////////////////////////////
