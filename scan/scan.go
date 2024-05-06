@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	. "github.com/digisan/go-generics"
@@ -364,17 +365,35 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, er
 
 	}, fPathOut)
 
-	if _, err := jt.FmtFileJS(fPathOut); err != nil {
-		return nil, err
-	}
-
 	if len(fPathOut) > 0 {
-		data, err := os.ReadFile(fPathOut)
+
+		// original processed data
+		dataNonFmt, err := os.ReadFile(fPathOut)
 		if err != nil {
 			return nil, err
 		}
-		if len(data) == 0 {
-			return nil, fmt.Errorf("FmtFileJS Error After FileLineScanEx")
+
+		// format processed data & overwrite
+		if _, err := jt.FmtFileJS(fPathOut); err != nil {
+			return nil, err
+		}
+
+		// check formatted data
+		dataFmt, err := os.ReadFile(fPathOut)
+		if err != nil {
+			return nil, err
+		}
+		if len(dataFmt) == 0 {
+
+			dir := filepath.Dir(fPathOut)
+			name := filepath.Base(fPathOut)
+			name = strs.TrimTailFromLast(name, ".")
+			name = fmt.Sprintf("%s-(non-format).json", name)
+			if err := os.WriteFile(filepath.Join(dir, name), dataNonFmt, os.ModePerm); err != nil {
+				return nil, err
+			}
+
+			return nil, fmt.Errorf("FmtFileJS Error After FileLineScanEx. '%s' saved for investigation", name)
 		}
 	}
 	return paths, nil
