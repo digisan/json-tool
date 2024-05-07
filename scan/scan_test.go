@@ -2,12 +2,11 @@ package scan
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
-
-	. "github.com/digisan/go-generics"
 )
 
 func TestScanJsonLine(t *testing.T) {
@@ -23,7 +22,7 @@ func TestScanJsonLine(t *testing.T) {
 		Fn_Elem_Str:    nil,
 	}
 
-	const DIR = "../data1"
+	const DIR = "../data"
 	des, err := os.ReadDir(DIR)
 	if err != nil {
 		fmt.Println(err)
@@ -35,31 +34,29 @@ func TestScanJsonLine(t *testing.T) {
 			continue
 		}
 
-		if In(de.Name(), "FlattenTest.json") {
-			continue
-		}
-
 		fPath := filepath.Join(DIR, de.Name())
 		fOut := filepath.Join("./", de.Name())
 
-		fmt.Printf("testing... %s\n", fPath)
+		fmt.Printf("processing... %s\n", fPath)
 		paths, err := ScanJsonLine(fPath, fOut, opt) // *** //
 		if err != nil {
-			panic(err)
+			log.Fatalln(err)
 		}
 		fmt.Printf("paths count... %d\n", len(paths))
 
 		// original copying check
 		data1, err := os.ReadFile(fPath)
 		if err != nil {
-			panic(err)
+			log.Fatalln(err)
 		}
 		data2, err := os.ReadFile(fOut)
 		if err != nil {
-			panic(err)
+			log.Fatalln(err)
 		}
 		if string(data1) != string(data2) {
-			panic("NOT copying equally")
+			log.Fatalln("NOT copying equally")
+		} else {
+			fmt.Println("successful")
 		}
 	}
 }

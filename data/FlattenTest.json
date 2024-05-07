@@ -1,5 +1,6 @@
 {
-  "array-0": [
+  "array-one": [
+    [],
     1,
     null,
     false,
@@ -16,7 +17,13 @@
         null,
         false,
         "abc"
-      ]
+      ],
+      {
+        "field": {}
+      },
+      null,
+      {},
+      []
     ],
     [
       [
@@ -29,13 +36,13 @@
       ]
     ]
   ],
-  "array-1": [
+  "array-two": [
     1,
     null,
     false,
     "abc"
   ],
-  "array-2": [
+  "array-three": [
     7,
     8,
     "ok",
@@ -54,7 +61,8 @@
       "abc",
       {
         "obj": {
-          "attr": "innervalue"
+          "attr": "innervalue",
+          "attr-bool": true
         }
       },
       [
@@ -64,7 +72,8 @@
           3,
           true,
           "innerarray"
-        ]
+        ],
+        null
       ]
     ]
   ],
@@ -136,13 +145,13 @@
       ]
     }
   ],
-  "object-1": {
-    "object-11": {
+  "object-one": {
+    "object-one1": {
       "a": "b",
       "c": "d",
       "e": "f"
     },
-    "object-12": {
+    "object-one2": {
       "a": "B",
       "c": "D",
       "e": "F"

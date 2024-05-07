@@ -166,12 +166,7 @@ func fnSetCurrentKeyLevel() func(above, this, below LineInfo) (string, error) {
 		// 	flagEmptyArr = true
 		// }
 
-		if In(this.ln, ARR_OPEN) && above.line != JUNK {
-			msg := "arrays as another array's direct elements cannot be processed now"
-			return "", fmt.Errorf("%v", msg)
-		}
-
-		if In(this.ln, OBJ_OPEN, OBJ_EMPTY) {
+		if In(this.ln, OBJ_OPEN, OBJ_EMPTY, ARR_OPEN, ARR_EMPTY) {
 
 			clrThisAndAfter(this.lvl)
 			_, values := MapToKVs(mLvlKey, func(ki, kj int) bool {
@@ -263,7 +258,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, er
 			log.Fatalf("[%d] - '%s' - %v", I, line, err)
 		} else {
 			if TrackMode {
-				fmt.Printf("%6d: %v\n", I, path)
+				fmt.Printf("%6d: %v -- %v\n", I, path, line)
 			}
 		}
 
