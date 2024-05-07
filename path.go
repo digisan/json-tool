@@ -209,6 +209,7 @@ func PathExists(fieldPath string, mFamilyTree map[string][]string) bool {
 	return ok
 }
 
+// empty object i.e. {} AND empty array i.e. [] will both be ignored, excluded from returned paths
 func GetLeavesPathOrderly(js string) (paths []string, values []gjson.Result) {
 	iteratePath(js, "", true, false, &paths, &values)
 	return

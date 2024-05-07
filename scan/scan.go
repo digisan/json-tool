@@ -174,7 +174,7 @@ func fnSetCurrentKeyLevel() func(above, this, below LineInfo) (string, error) {
 			}, nil)
 			path := strings.Join(values, ".")
 
-			if above.lnType == KV_ARR_OPEN {
+			if above.lnType == KV_ARR_OPEN || above.ln == ARR_OPEN {
 
 				if _, ok := mPathIdx[path]; !ok {
 					mPathIdx[path] = 0
@@ -227,10 +227,10 @@ var (
 	TrackMode = false
 )
 
-func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, err error) {
+func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, values []any, err error) {
 
 	if _, err := jt.FmtFileJS(fPathIn); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	SetCurrentKeyLevel := fnSetCurrentKeyLevel()
@@ -241,15 +241,19 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, er
 
 		defer func() { I++ }()
 
+		var value any
 		lnInfo3 := [3]LineInfo{}
 		for i, cacheLine := range cache {
-			lnType, key, _, _ := simpleFetch(cacheLine)
+			lnType, k, v, _ := simpleFetch(cacheLine)
 			lnInfo3[i] = LineInfo{
 				line:   cacheLine,
 				ln:     strings.TrimSuffix(strings.TrimSpace(cacheLine), ","),
-				key:    key,
+				key:    k,
 				lnType: lnType,
 				lvl:    strings.Count(strs.HeadBlank(cacheLine), INDENT), // formatted indent is 2 spaces here
+			}
+			if i == 1 {
+				value = v
 			}
 		}
 
@@ -264,6 +268,9 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, er
 
 		// collect every path
 		paths = append(paths, path)
+
+		// collect every value
+		values = append(values, value)
 
 		// simple validate path
 		if _, ok := mCheck[path]; !ok {
@@ -365,18 +372,18 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, er
 		// original processed data
 		dataNonFmt, err := os.ReadFile(fPathOut)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		// format processed data & overwrite
 		if _, err := jt.FmtFileJS(fPathOut); err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 
 		// check formatted data
 		dataFmt, err := os.ReadFile(fPathOut)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
 		if len(dataFmt) == 0 {
 
@@ -385,13 +392,31 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, er
 			name = strs.TrimTailFromLast(name, ".")
 			name = fmt.Sprintf("%s-(non-format).json", name)
 			if err := os.WriteFile(filepath.Join(dir, name), dataNonFmt, os.ModePerm); err != nil {
-				return nil, err
+				return nil, nil, err
 			}
 
-			return nil, fmt.Errorf("FmtFileJS Error After FileLineScanEx. '%s' saved for investigation", name)
+			return nil, nil, fmt.Errorf("FmtFileJS Error After FileLineScanEx. '%s' saved for investigation", name)
 		}
 	}
-	return paths, nil
+	return paths, values, nil
+}
+
+func FlattenJson(fPath string) (map[string]any, error) {
+	paths, values, err := ScanJsonLine(fPath, "", OptLineProc{})
+	if err != nil {
+		return nil, err
+	}
+	m := make(map[string]any)
+	for i, path := range paths {
+		value := values[i]
+		if v, ok := value.(string); ok {
+			if v = strings.TrimSpace(v); In(v, "{", "}", "[", "]") {
+				continue
+			}
+			m[path] = v
+		}
+	}
+	return m, nil
 }
 
 ///////////////////////////////////////////////////////////////
