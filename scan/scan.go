@@ -290,7 +290,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 		case KV:
 
 			if fn := opt.Fn_KV; fn != nil {
-				ok, s := fn(I, path, k, v)
+				ok, s := fn(I, path, k, v, cache)
 				if len(s) == 0 {
 					return ok, fmt.Sprintf(`%s"%v": %v%v`, hb, k, v, c)
 				}
@@ -301,7 +301,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 		case KV_STR:
 
 			if fn := opt.Fn_KV_Str; fn != nil {
-				ok, s := fn(I, path, k, v.(string))
+				ok, s := fn(I, path, k, v.(string), cache)
 				if len(s) == 0 {
 					return ok, fmt.Sprintf(`%s"%v": "%v"%v`, hb, k, v, c)
 				}
@@ -312,7 +312,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 		case KV_OBJ_OPEN:
 
 			if fn := opt.Fn_KV_Obj_Open; fn != nil {
-				ok, s := fn(I, path, k, v.(string))
+				ok, s := fn(I, path, k, v.(string), cache)
 				if len(s) == 0 {
 					return ok, fmt.Sprintf(`%s"%v": %v`, hb, k, v)
 				}
@@ -323,7 +323,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 		case KV_ARR_OPEN:
 
 			if fn := opt.Fn_KV_Arr_Open; fn != nil {
-				ok, s := fn(I, path, k, v.(string))
+				ok, s := fn(I, path, k, v.(string), cache)
 				if len(s) == 0 {
 					return ok, fmt.Sprintf(`%s"%v": %v`, hb, k, v)
 				}
@@ -334,7 +334,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 		case OBJ:
 
 			if fn := opt.Fn_Obj; fn != nil {
-				ok, s := fn(I, path, v.(string))
+				ok, s := fn(I, path, v.(string), cache)
 				if len(s) == 0 {
 					return ok, hb + v.(string) + c
 				}
@@ -345,7 +345,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 		case ARR:
 
 			if fn := opt.Fn_Arr; fn != nil {
-				ok, s := fn(I, path, v.(string))
+				ok, s := fn(I, path, v.(string), cache)
 				if len(s) == 0 {
 					return ok, hb + v.(string) + c
 				}
@@ -356,7 +356,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 		case ELEM:
 
 			if fn := opt.Fn_Elem; fn != nil {
-				ok, s := fn(I, path, v)
+				ok, s := fn(I, path, v, cache)
 				if len(s) == 0 {
 					return ok, fmt.Sprintf("%s%v%s", hb, v, c)
 				}
@@ -367,7 +367,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 		case ELEM_STR:
 
 			if fn := opt.Fn_Elem_Str; fn != nil {
-				ok, s := fn(I, path, v.(string))
+				ok, s := fn(I, path, v.(string), cache)
 				if len(s) == 0 {
 					return ok, fmt.Sprintf(`%s"%v"%s`, hb, v, c)
 				}
@@ -438,14 +438,14 @@ func FlattenJson(fPath string) (map[string]any, error) {
 ///////////////////////////////////////////////////////////////
 
 type OptLineProc struct {
-	Fn_KV          func(I int, path, k string, v any) (bool, string)
-	Fn_KV_Str      func(I int, path, k, v string) (bool, string)
-	Fn_KV_Obj_Open func(I int, path, k, v string) (bool, string)
-	Fn_KV_Arr_Open func(I int, path, k, v string) (bool, string)
-	Fn_Obj         func(I int, path, v string) (bool, string)
-	Fn_Arr         func(I int, path, v string) (bool, string)
-	Fn_Elem        func(I int, path string, v any) (bool, string)
-	Fn_Elem_Str    func(I int, path, v string) (bool, string)
+	Fn_KV          func(I int, path, k string, v any, cache []string) (bool, string)
+	Fn_KV_Str      func(I int, path, k, v string, cache []string) (bool, string)
+	Fn_KV_Obj_Open func(I int, path, k, v string, cache []string) (bool, string)
+	Fn_KV_Arr_Open func(I int, path, k, v string, cache []string) (bool, string)
+	Fn_Obj         func(I int, path, v string, cache []string) (bool, string)
+	Fn_Arr         func(I int, path, v string, cache []string) (bool, string)
+	Fn_Elem        func(I int, path string, v any, cache []string) (bool, string)
+	Fn_Elem_Str    func(I int, path, v string, cache []string) (bool, string)
 }
 
 // func fn_kv(I int, path, k string, v any) (bool, string) {
