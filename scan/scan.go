@@ -291,7 +291,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 
 			if fn := opt.Fn_KV; fn != nil {
 				ok, s, rmComma := fn(I, path, k, v, cache)
-				c = IF(rmComma, "", ",")
+				c = IF(rmComma && c == ",", "", c)
 				if len(s) == 0 {
 					return ok, fmt.Sprintf(`%s"%v": %v%v`, hb, k, v, c)
 				}
@@ -303,7 +303,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 
 			if fn := opt.Fn_KV_Str; fn != nil {
 				ok, s, rmComma := fn(I, path, k, v.(string), cache)
-				c = IF(rmComma, "", ",")
+				c = IF(rmComma && c == ",", "", c)
 				if len(s) == 0 {
 					return ok, fmt.Sprintf(`%s"%v": "%v"%v`, hb, k, v, c)
 				}
@@ -315,7 +315,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 
 			if fn := opt.Fn_KV_Obj_Open; fn != nil {
 				ok, s, rmComma := fn(I, path, k, v.(string), cache)
-				c = IF(rmComma, "", ",")
+				c = IF(rmComma && c == ",", "", c)
 				if len(s) == 0 {
 					return ok, fmt.Sprintf(`%s"%v": %v`, hb, k, v)
 				}
@@ -327,7 +327,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 
 			if fn := opt.Fn_KV_Arr_Open; fn != nil {
 				ok, s, rmComma := fn(I, path, k, v.(string), cache)
-				c = IF(rmComma, "", ",")
+				c = IF(rmComma && c == ",", "", c)
 				if len(s) == 0 {
 					return ok, fmt.Sprintf(`%s"%v": %v`, hb, k, v)
 				}
@@ -339,7 +339,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 
 			if fn := opt.Fn_Obj; fn != nil {
 				ok, s, rmComma := fn(I, path, v.(string), cache)
-				c = IF(rmComma, "", ",")
+				c = IF(rmComma && c == ",", "", c)
 				if len(s) == 0 {
 					return ok, hb + v.(string) + c
 				}
@@ -351,7 +351,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 
 			if fn := opt.Fn_Arr; fn != nil {
 				ok, s, rmComma := fn(I, path, v.(string), cache)
-				c = IF(rmComma, "", ",")
+				c = IF(rmComma && c == ",", "", c)
 				if len(s) == 0 {
 					return ok, hb + v.(string) + c
 				}
@@ -363,7 +363,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 
 			if fn := opt.Fn_Elem; fn != nil {
 				ok, s, rmComma := fn(I, path, v, cache)
-				c = IF(rmComma, "", ",")
+				c = IF(rmComma && c == ",", "", c)
 				if len(s) == 0 {
 					return ok, fmt.Sprintf("%s%v%s", hb, v, c)
 				}
@@ -375,7 +375,7 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 
 			if fn := opt.Fn_Elem_Str; fn != nil {
 				ok, s, rmComma := fn(I, path, v.(string), cache)
-				c = IF(rmComma, "", ",")
+				c = IF(rmComma && c == ",", "", c)
 				if len(s) == 0 {
 					return ok, fmt.Sprintf(`%s"%v"%s`, hb, v, c)
 				}
