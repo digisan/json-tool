@@ -37,9 +37,9 @@ func TestScanJsonLine(t *testing.T) {
 			continue
 		}
 
-		// if de.Name() != "FlattenTest.json" {
-		// 	continue
-		// }
+		if de.Name() != "FlattenTest.json" {
+			continue
+		}
 
 		fPath := filepath.Join(DIR, de.Name())
 		fOut := filepath.Join("./", de.Name())
@@ -53,10 +53,10 @@ func TestScanJsonLine(t *testing.T) {
 
 		// print each (path, value)
 		{
-			// for i, path := range paths {
-			// 	value := values[i]
-			// 	fmt.Printf("==> %s -- %v\n", path, value)
-			// }
+			for i, path := range paths {
+				value := values[i]
+				fmt.Printf("==> %s -- %v\n", path, value)
+			}
 		}
 
 		// *** //
@@ -95,24 +95,24 @@ func TestFlattenJson(t *testing.T) {
 			continue
 		}
 
-		if In(de.Name(),
-			"Activities.json",
-			"ModulePrerequisites.json",
-			"Modules.json",
-			"Questions.json",
-			"StudentMastery.json",
-			"Substrands.json",
-			"data.json",
-			"example.json",
-			"itemResults.json",
-			"mixed.json",
-			"otflevel.json") {
-			continue
-		}
-
-		// if de.Name() != "package-lock.json" {
+		// if In(de.Name(),
+		// 	"Activities.json",
+		// 	"ModulePrerequisites.json",
+		// 	"Modules.json",
+		// 	"Questions.json",
+		// 	"StudentMastery.json",
+		// 	"Substrands.json",
+		// 	"data.json",
+		// 	"example.json",
+		// 	"itemResults.json",
+		// 	"mixed.json",
+		// 	"otflevel.json") {
 		// 	continue
 		// }
+
+		if de.Name() != "FlattenTest.json" {
+			continue
+		}
 
 		////////////////////////////////////////////////
 
@@ -182,5 +182,21 @@ func TestFlattenJson(t *testing.T) {
 			}
 		}
 		fmt.Println()
+	}
+}
+
+func TestLastFieldOrElem(t *testing.T) {
+
+	_, paths, _, err := AnalyzeJson("../data/FlattenTest.json")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	// for _, path := range paths {
+	// 	fmt.Println(path)
+	// }
+
+	lPaths := LastFieldLines("ee", paths)
+	for _, path := range lPaths {
+		fmt.Println(path)
 	}
 }

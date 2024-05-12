@@ -155,6 +155,24 @@
       ]
     }
   ],
+  "wrapper": {
+    "object-one": {
+      "object-one1": {
+        "a": "b",
+        "c": "d",
+        "e": "f"
+      },
+      "ee": "EE",
+      "object-one2": {
+        "a": "B",
+        "c": "D",
+        "e": [
+          "F"
+        ]
+      }
+    },
+    "ee": "EE"
+  },
   "object-one": {
     "object-one1": {
       "a": "b",
@@ -164,21 +182,50 @@
     "object-one2": {
       "a": "B",
       "c": "D",
-      "e": "F"
+      "e": [
+        "F"
+      ]
     }
   },
+  "array-object": [
+    {
+      "simple": null,
+      "object-one2": {
+        "a": "B",
+        "c": "D",
+        "e": [
+          "F"
+        ]
+      },
+      "simple2": 123
+    },
+    {
+      "simple2": 123,
+      "object-one1": {
+        "a": "B",
+        "c": "D",
+        "e": [
+          "F"
+        ]
+      }
+    }
+  ],
   "boolean": true,
   "null": null,
   "number": 123,
   "object": {
     "a": "b",
     "c": "d",
-    "e": "f",
+    "e": [
+      "f"
+    ],
     "h": "H"
   },
   "string": "Hello World",
   "h": "H",
   "a": "b",
   "c": "d",
-  "e": "f"
+  "e": [
+    "f"
+  ]
 }

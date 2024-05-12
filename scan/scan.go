@@ -492,6 +492,71 @@ func FlattenJson(fPath string) (map[string]any, error) {
 	return m, nil
 }
 
+func LastSimpleFieldLines(field string, paths []string) (lastPaths []string) {
+	for i, path := range paths {
+		if i < len(paths)-1 {
+			below := paths[i+1]
+			if strings.HasSuffix(path, "."+field) || path == field {
+				if strings.HasSuffix(below, "}") {
+					lastPaths = append(lastPaths, path)
+				}
+			}
+		}
+	}
+	return
+}
+
+func LastObjectFieldLines(field string, paths []string) (lastPaths []string) {
+	endPaths := []string{}
+	for i, path := range paths {
+		if i < len(paths)-1 {
+			below := paths[i+1]
+			if strings.HasSuffix(path, "."+field+"}") || path == field+"}" {
+				if strings.HasSuffix(below, "}") {
+					endPaths = append(endPaths, strings.TrimSuffix(path, "}"))
+				}
+			}
+		}
+	}
+	for _, path := range paths {
+		for _, ep := range endPaths {
+			if strings.HasPrefix(path, ep+".") || path == ep || path == ep+"}" {
+				lastPaths = append(lastPaths, path)
+			}
+		}
+	}
+	return
+}
+
+func LastArrayFieldLines(field string, paths []string) (lastPaths []string) {
+	endPaths := []string{}
+	for i, path := range paths {
+		if i < len(paths)-1 {
+			below := paths[i+1]
+			if strings.HasSuffix(path, "."+field+"]") || path == field+"]" {
+				if strings.HasSuffix(below, "}") {
+					endPaths = append(endPaths, strings.TrimSuffix(path, "]"))
+				}
+			}
+		}
+	}
+	for _, path := range paths {
+		for _, ep := range endPaths {
+			if strings.HasPrefix(path, ep+".") || path == ep || path == ep+"]" {
+				lastPaths = append(lastPaths, path)
+			}
+		}
+	}
+	return
+}
+
+func LastFieldLines(field string, paths []string) (lastPaths []string) {
+	lastPaths = LastSimpleFieldLines(field, paths)
+	lastPaths = append(lastPaths, LastObjectFieldLines(field, paths)...)
+	lastPaths = append(lastPaths, LastArrayFieldLines(field, paths)...)
+	return
+}
+
 ///////////////////////////////////////////////////////////////
 
 type OptLineProc struct {
