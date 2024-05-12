@@ -227,17 +227,17 @@ var (
 	TrackMode = false
 )
 
-func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, values []any, err error) {
+func AnalyzeJson(fPathIn string) (js string, paths []string, values []any, err error) {
 
 	if _, err := jt.FmtFileJS(fPathIn); err != nil {
-		return nil, nil, err
+		return "", nil, nil, err
 	}
 
 	SetCurrentKeyLevel := fnSetCurrentKeyLevel()
 	I := 0                              // line number
 	mCheck := make(map[string]struct{}) // for validating paths
 
-	fd.FileLineScanEx(fPathIn, 1, 1, JUNK, func(line string, cache []string) (bool, string) {
+	js, err = fd.FileLineScanEx(fPathIn, 1, 1, JUNK, func(line string, cache []string) (bool, string) {
 
 		defer func() { I++ }()
 
@@ -279,7 +279,26 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 			log.Fatalf("path validation failed: [%d] '%s'", I, path)
 		}
 
-		///////////////////////////////////////////////////////////////////////////
+		return true, ""
+
+	}, "")
+
+	return js, paths, values, err
+}
+
+func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) error {
+
+	js, paths, _, err := AnalyzeJson(fPathIn)
+	if err != nil {
+		return err
+	}
+	lines := strings.Split(js, "\n")
+
+	I := 0 // line number
+
+	fd.FileLineScanEx(fPathIn, 1, 1, JUNK, func(line string, cache []string) (bool, string) {
+
+		defer func() { I++ }()
 
 		lnType, k, v, comma := simpleFetch(line)
 		c := IF(comma, ",", "")
@@ -289,99 +308,131 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 
 		case KV:
 
+			if line != fmt.Sprintf(`%s"%v": %v%v`, hb, k, v, c) {
+				log.Fatalln("ScanJsonLineEx KV error")
+			}
+
 			if fn := opt.Fn_KV; fn != nil {
-				ok, s, rmComma := fn(I, path, k, v, cache)
-				c = IF(rmComma && c == ",", "", c)
+				ok, s, rmComma := fn(I, k, v, lines, paths)
+				c = IF(rmComma, "", c)
 				if len(s) == 0 {
-					return ok, fmt.Sprintf(`%s"%v": %v%v`, hb, k, v, c)
+					return ok, line
 				}
 				return ok, hb + s + c
 			}
-			return true, fmt.Sprintf(`%s"%v": %v%v`, hb, k, v, c)
+			return true, line
 
 		case KV_STR:
 
+			if line != fmt.Sprintf(`%s"%v": "%v"%v`, hb, k, v, c) {
+				log.Fatalln("ScanJsonLineEx KV_STR error")
+			}
+
 			if fn := opt.Fn_KV_Str; fn != nil {
-				ok, s, rmComma := fn(I, path, k, v.(string), cache)
-				c = IF(rmComma && c == ",", "", c)
+				ok, s, rmComma := fn(I, k, v.(string), lines, paths)
+				c = IF(rmComma, "", c)
 				if len(s) == 0 {
-					return ok, fmt.Sprintf(`%s"%v": "%v"%v`, hb, k, v, c)
+					return ok, line
 				}
 				return ok, hb + s + c
 			}
-			return true, fmt.Sprintf(`%s"%v": "%v"%v`, hb, k, v, c)
+			return true, line
 
 		case KV_OBJ_OPEN:
 
+			if line != fmt.Sprintf(`%s"%v": %v`, hb, k, v) {
+				log.Fatalln("ScanJsonLineEx KV_OBJ_OPEN error")
+			}
+
 			if fn := opt.Fn_KV_Obj_Open; fn != nil {
-				ok, s, rmComma := fn(I, path, k, v.(string), cache)
-				c = IF(rmComma && c == ",", "", c)
+				ok, s, rmComma := fn(I, k, v.(string), lines, paths)
+				c = IF(rmComma, "", c)
 				if len(s) == 0 {
-					return ok, fmt.Sprintf(`%s"%v": %v`, hb, k, v)
+					return ok, line
 				}
 				return ok, hb + s + c
 			}
-			return true, fmt.Sprintf(`%s"%v": %v`, hb, k, v)
+			return true, line
 
 		case KV_ARR_OPEN:
 
+			if line != fmt.Sprintf(`%s"%v": %v`, hb, k, v) {
+				log.Fatalln("ScanJsonLineEx KV_ARR_OPEN error")
+			}
+
 			if fn := opt.Fn_KV_Arr_Open; fn != nil {
-				ok, s, rmComma := fn(I, path, k, v.(string), cache)
-				c = IF(rmComma && c == ",", "", c)
+				ok, s, rmComma := fn(I, k, v.(string), lines, paths)
+				c = IF(rmComma, "", c)
 				if len(s) == 0 {
-					return ok, fmt.Sprintf(`%s"%v": %v`, hb, k, v)
+					return ok, line
 				}
 				return ok, hb + s + c
 			}
-			return true, fmt.Sprintf(`%s"%v": %v`, hb, k, v)
+			return true, line
 
 		case OBJ:
 
+			if line != hb+v.(string)+c {
+				log.Fatalln("ScanJsonLineEx OBJ error")
+			}
+
 			if fn := opt.Fn_Obj; fn != nil {
-				ok, s, rmComma := fn(I, path, v.(string), cache)
-				c = IF(rmComma && c == ",", "", c)
+				ok, s, rmComma := fn(I, v.(string), lines, paths)
+				c = IF(rmComma, "", c)
 				if len(s) == 0 {
-					return ok, hb + v.(string) + c
+					return ok, line
 				}
 				return ok, hb + s + c
 			}
-			return true, hb + v.(string) + c
+			return true, line
 
 		case ARR:
 
+			if line != hb+v.(string)+c {
+				log.Fatalln("ScanJsonLineEx ARR error")
+			}
+
 			if fn := opt.Fn_Arr; fn != nil {
-				ok, s, rmComma := fn(I, path, v.(string), cache)
-				c = IF(rmComma && c == ",", "", c)
+				ok, s, rmComma := fn(I, v.(string), lines, paths)
+				c = IF(rmComma, "", c)
 				if len(s) == 0 {
-					return ok, hb + v.(string) + c
+					return ok, line
 				}
 				return ok, hb + s + c
 			}
-			return true, hb + v.(string) + c
+			return true, line
 
 		case ELEM:
 
+			if line != fmt.Sprintf("%s%v%s", hb, v, c) {
+				log.Fatalln("ScanJsonLineEx ELEM error")
+			}
+
 			if fn := opt.Fn_Elem; fn != nil {
-				ok, s, rmComma := fn(I, path, v, cache)
-				c = IF(rmComma && c == ",", "", c)
+				ok, s, rmComma := fn(I, v, lines, paths)
+				c = IF(rmComma, "", c)
 				if len(s) == 0 {
-					return ok, fmt.Sprintf("%s%v%s", hb, v, c)
+					return ok, line
 				}
 				return ok, hb + s + c
 			}
-			return true, fmt.Sprintf("%s%v%s", hb, v, c)
+			return true, line
 
 		case ELEM_STR:
 
+			if line != fmt.Sprintf(`%s"%v"%s`, hb, v, c) {
+				log.Fatalln("ScanJsonLineEx ELEM_STR error")
+			}
+
 			if fn := opt.Fn_Elem_Str; fn != nil {
-				ok, s, rmComma := fn(I, path, v.(string), cache)
-				c = IF(rmComma && c == ",", "", c)
+				ok, s, rmComma := fn(I, v.(string), lines, paths)
+				c = IF(rmComma, "", c)
 				if len(s) == 0 {
-					return ok, fmt.Sprintf(`%s"%v"%s`, hb, v, c)
+					return ok, line
 				}
 				return ok, hb + s + c
 			}
-			return true, fmt.Sprintf(`%s"%v"%s`, hb, v, c)
+			return true, line
 
 		case UNKNOWN:
 			panic("Unknown json line")
@@ -396,37 +447,35 @@ func ScanJsonLine(fPathIn, fPathOut string, opt OptLineProc) (paths []string, va
 		// original processed data
 		dataNonFmt, err := os.ReadFile(fPathOut)
 		if err != nil {
-			return nil, nil, err
+			return err
 		}
 
 		// format processed data & overwrite
 		if _, err := jt.FmtFileJS(fPathOut); err != nil {
-			return nil, nil, err
+			return err
 		}
 
 		// check formatted data
 		dataFmt, err := os.ReadFile(fPathOut)
 		if err != nil {
-			return nil, nil, err
+			return err
 		}
 		if len(dataFmt) == 0 {
-
 			dir := filepath.Dir(fPathOut)
 			name := filepath.Base(fPathOut)
 			name = strs.TrimTailFromLast(name, ".")
 			name = fmt.Sprintf("%s-(non-format).json", name)
 			if err := os.WriteFile(filepath.Join(dir, name), dataNonFmt, os.ModePerm); err != nil {
-				return nil, nil, err
+				return err
 			}
-
-			return nil, nil, fmt.Errorf("FmtFileJS Error After FileLineScanEx. '%s' saved for investigation", name)
+			return fmt.Errorf("FmtFileJS Error After FileLineScanEx. '%s' saved for investigation", name)
 		}
 	}
-	return paths, values, nil
+	return nil
 }
 
 func FlattenJson(fPath string) (map[string]any, error) {
-	paths, values, err := ScanJsonLine(fPath, "", OptLineProc{})
+	_, paths, values, err := AnalyzeJson(fPath)
 	if err != nil {
 		return nil, err
 	}
@@ -446,14 +495,14 @@ func FlattenJson(fPath string) (map[string]any, error) {
 ///////////////////////////////////////////////////////////////
 
 type OptLineProc struct {
-	Fn_KV          func(I int, path, k string, v any, cache []string) (bool, string, bool)
-	Fn_KV_Str      func(I int, path, k, v string, cache []string) (bool, string, bool)
-	Fn_KV_Obj_Open func(I int, path, k, v string, cache []string) (bool, string, bool)
-	Fn_KV_Arr_Open func(I int, path, k, v string, cache []string) (bool, string, bool)
-	Fn_Obj         func(I int, path, v string, cache []string) (bool, string, bool)
-	Fn_Arr         func(I int, path, v string, cache []string) (bool, string, bool)
-	Fn_Elem        func(I int, path string, v any, cache []string) (bool, string, bool)
-	Fn_Elem_Str    func(I int, path, v string, cache []string) (bool, string, bool)
+	Fn_KV          func(I int, k string, v any, lines, paths []string) (bool, string, bool)
+	Fn_KV_Str      func(I int, k, v string, lines, paths []string) (bool, string, bool)
+	Fn_KV_Obj_Open func(I int, k, v string, lines, paths []string) (bool, string, bool)
+	Fn_KV_Arr_Open func(I int, k, v string, lines, paths []string) (bool, string, bool)
+	Fn_Obj         func(I int, v string, lines, paths []string) (bool, string, bool)
+	Fn_Arr         func(I int, v string, lines, paths []string) (bool, string, bool)
+	Fn_Elem        func(I int, v any, lines, paths []string) (bool, string, bool)
+	Fn_Elem_Str    func(I int, v string, lines, paths []string) (bool, string, bool)
 }
 
 // func fn_kv(I int, path, k string, v any) (bool, string) {

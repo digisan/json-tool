@@ -37,15 +37,15 @@ func TestScanJsonLine(t *testing.T) {
 			continue
 		}
 
-		if de.Name() != "FlattenTest.json" {
-			continue
-		}
+		// if de.Name() != "FlattenTest.json" {
+		// 	continue
+		// }
 
 		fPath := filepath.Join(DIR, de.Name())
 		fOut := filepath.Join("./", de.Name())
 
 		fmt.Printf("processing... %s\n", fPath)
-		paths, values, err := ScanJsonLine(fPath, fOut, opt) // *** //
+		_, paths, values, err := AnalyzeJson(fPath) // *** //
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -53,10 +53,15 @@ func TestScanJsonLine(t *testing.T) {
 
 		// print each (path, value)
 		{
-			for i, path := range paths {
-				value := values[i]
-				fmt.Printf("==> %s -- %v\n", path, value)
-			}
+			// for i, path := range paths {
+			// 	value := values[i]
+			// 	fmt.Printf("==> %s -- %v\n", path, value)
+			// }
+		}
+
+		// *** //
+		if err := ScanJsonLine(fPath, fOut, opt); err != nil {
+			log.Fatalln(err)
 		}
 
 		// original copying check
@@ -90,9 +95,26 @@ func TestFlattenJson(t *testing.T) {
 			continue
 		}
 
-		if de.Name() != "FlattenTest.json" {
+		if In(de.Name(),
+			"Activities.json",
+			"ModulePrerequisites.json",
+			"Modules.json",
+			"Questions.json",
+			"StudentMastery.json",
+			"Substrands.json",
+			"data.json",
+			"example.json",
+			"itemResults.json",
+			"mixed.json",
+			"otflevel.json") {
 			continue
 		}
+
+		// if de.Name() != "package-lock.json" {
+		// 	continue
+		// }
+
+		////////////////////////////////////////////////
 
 		fPath := filepath.Join(DIR, de.Name())
 		fmt.Printf("processing... %s\n", fPath)
@@ -141,6 +163,9 @@ func TestFlattenJson(t *testing.T) {
 
 		oPaths, _ := jt.GetLeavesPathOrderly(js)
 		fmt.Printf("GetLeavesPathOrderly: paths_orderly %d\n", len(oPaths))
+		// for _, op := range oPaths {
+		// 	fmt.Println("ordered path ==>", op)
+		// }
 
 		fmt.Println("searching... k1 isn't in oPaths(GetLeavesPathOrderly)")
 		for k1, v1 := range m1 {
